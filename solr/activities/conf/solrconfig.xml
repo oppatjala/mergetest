@@ -6,7 +6,7 @@
        that you fully re-index after changing this setting as it can
        affect both how text is indexed and queried.
   -->
-  <luceneMatchVersion>LUCENE_40</luceneMatchVersion>
+  <luceneMatchVersion>LUCENE_42</luceneMatchVersion>
 
   <!-- <lib/> directives can be used to instruct Solr to load an Jars
        identified and use them to resolve any "plugins" specified in
@@ -26,8 +26,9 @@
        found in it are included as if you had used the following
        syntax...
        
-              <lib dir="./lib" />
     -->
+    <lib dir="../../lib/" regex="solr-dataimporthandler-*\.jar" />
+    <lib dir="./lib/"/>
 
   <!-- Data Directory
 
@@ -270,7 +271,7 @@
          "dir" - the target directory for transaction logs, defaults to the
             solr data directory.  --> 
     <updateLog>
-      <str name="dir">${solr.data.dir:}</str>
+      <str name="dir">${solr.ulog.dir:}</str>
     </updateLog>
    
 
@@ -506,8 +507,9 @@
          using enableRemoteStreaming="true"
 
       --> 
-    <requestParsers enableRemoteStreaming="true" 
-                    multipartUploadLimitInKB="2048000" />
+      <requestParsers enableRemoteStreaming="true" 
+                      multipartUploadLimitInKB="2048"
+                      formdataUploadLimitInKB="2048"/>
 
     <!-- HTTP Caching
 
@@ -592,7 +594,7 @@
        of SearchComponents (see below) and supports distributed
        queries across multiple shards
     -->
-  <requestHandler name="/select" class="solr.SearchHandler">
+  <requestHandler name="/query" class="solr.SearchHandler">
      <lst name="defaults">
        <str name="echoParams">explicit</str>
        <int name="rows">10</int>
@@ -600,8 +602,7 @@
        <str name="indent">true</str>
        <str name="df">name</str>
      </lst>
-
-    </requestHandler>
+  </requestHandler>
 
   <!-- realtime get handler, guaranteed to return the latest stored fields of
        any document, without the need to commit or open a new searcher.  The
@@ -609,6 +610,8 @@
   <requestHandler name="/get" class="solr.RealTimeGetHandler">
      <lst name="defaults">
        <str name="omitHeader">true</str>
+       <str name="wt">json</str>
+       <str name="indent">true</str>       
      </lst>
   </requestHandler>
   
@@ -626,10 +629,10 @@
        <str name="fl">*,score</str>
 
        <str name="qf">
-          name^1
+          name^10 catchall^1
        </str>
        <str name="pf">
-          name^1
+          name^10
        </str>
        
        <str name="mm">3&lt;-1 5&lt;-2 6&lt;90%</str>

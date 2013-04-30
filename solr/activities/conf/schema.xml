@@ -149,15 +149,16 @@
     <field name="provider_name" type="text_general" indexed="true" stored="true" required="true"/> <!-- from Provider -->
     <field name="provider_name_alpha_sort" type="text_alpha_only_sort" indexed="true" stored="true" required="true"/> <!-- Do not set this, copy fields set this --> 
     <field name="provider_location" type="lat_lon" indexed="true" stored="true" required="true"/> <!-- from Provider -->
+    <field name="provider_city" type="string" indexed="true" stored="true" required="false"/> <!-- from Provider address-->
+    <field name="provider_state" type="string" indexed="true" stored="true" required="false"/> <!-- from Provider address-->
+    <field name="provider_zip" type="string" indexed="true" stored="true" required="false"/> <!-- from Provider address-->    
 
     <field name="vendor_id" type="string" indexed="true" stored="true" required="true"/>
 
-    <field name="event_instructors" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
-    <field name="event_locations" type="lat_lon" indexed="true" stored="true" required="false" multiValued="true"/>
-    
+    <field name="event_instructors" type="string" indexed="true" stored="true" required="false" multiValued="true"/>    
     <!-- NOTE: THIS IS NOT THE FINAL FORMAT FOR STORING THIS DATA-->
-    <field name="event_start" type="" indexed="true" stored="true" required="false" multiValued="true"/>
-    <field name="event_finish" type="" indexed="true" stored="true" required="false" multiValued="true"/>
+    <field name="event_start" type="date" indexed="true" stored="true" required="false" multiValued="true"/>
+    <field name="event_finish" type="date" indexed="true" stored="true" required="false" multiValued="true"/>
 
     <!-- These fields track the status of the activity entry, they do not specify event data -->
     <field name="status" type="int" indexed="true" stored="true" required="true"/>
@@ -167,8 +168,8 @@
     <field name="indexed_date" type="date" indexed="true" stored="true" default="NOW"/> <!-- Do not set this, the index will set this -->
 
     <!-- catchall fields -->
-    <field name="catchall" type="text_general" indexed="true" stored="false"/> <!-- Do not set this, copy fields set this -->
-    <field name="catchall_spell" type="text_spell" indexed="true" stored="false"/> <!-- Do not set this, copy fields set this -->
+    <field name="catchall" type="text_general" indexed="true" stored="false" multiValued="true"/> <!-- Do not set this, copy fields set this -->
+    <field name="catchall_spell" type="text_spell" indexed="true" stored="false" multiValued="true"/> <!-- Do not set this, copy fields set this -->
     
     <!-- Required by the system to enable clustering -->
     <field name="_version_" type="long" indexed="true" stored="true" multiValued="false"/> <!-- Do not set this, the index will set this -->
