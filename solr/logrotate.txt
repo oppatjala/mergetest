@@ -1,0 +1,10 @@
+/mnt/log/tomcat6/* {
+ daily
+ missingok
+ rotate 7
+ compress
+ delaycompress
+ notifempty
+ copytruncate
+ dateext
+}
