@@ -33,7 +33,7 @@
         <field column="provider_id" name="provider_id"/>
         <field column="provider_name" name="provider_name"/>
         
-        <entity name="provider_coords" dataSource="rw_db" query="select CONCAT(PRO.latitude,',',PRO.latitude) as provider_coordinates from provider as PRO where PRO.id='${provider.provider_id}' and PRO.latitude IS NOT NULL and PRO.longitude IS NOT NULL">
+        <entity name="provider_coords" dataSource="rw_db" query="select CONCAT(PRO.latitude,',',PRO.longitude) as provider_coordinates from provider as PRO where PRO.id='${provider.provider_id}' and PRO.latitude IS NOT NULL and PRO.longitude IS NOT NULL">
           <field column="provider_coordinates" name="provider_coordinates"/>
           <!-- <field column="provider_city" name="provider_city"/>
           <field column="provider_state" name="provider_state"/>
