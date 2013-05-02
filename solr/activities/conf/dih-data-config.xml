@@ -1,0 +1,50 @@
+<dataConfig>
+  <document>
+    <!-- TODO replace this with select * from activity where status=0 -->
+    <entity name="activity" pk="id" dataSource="rw_db"
+        query="select * from activity" 
+        deltaQuery="select * from activity where last_modified_date > '${dataimporter.last_index_time}'">
+
+      <field column="id" name="id"/>
+      <field column="name" name="name"/>
+      <field column="description" name="description"/>
+      <field column="cost" name="cost"/>
+      <field column="max_capacity" name="max_capacity"/>
+      <field column="num_open" name="num_open"/>
+      <field column="membership_required" name="membership_required"/>
+      <field column="status" name="status"/>
+      <field column="start_date" name="start_date"/>
+      <field column="end_date" name="end_date"/>
+      <field column="last_modified_date" name="last_modified_date"/>
+
+      <entity name="categories" query="select CAT.id AS category_ids, CAT.name AS category_names from category as CAT JOIN activity_categories as AC ON CAT.id=AC.category_id JOIN activity as ACT ON AC.activity_id=ACT.id where ACT.id='${activity.id}'">
+        <field column="category_ids" name="category_ids"/>
+        <field column="category_names" name="category_names"/>
+      </entity>
+
+      <entity name="events" query="select AE.instructor AS event_instructors, AE.event_start AS event_start, AE.event_finish AS event_finish from activity_events as AE where AE.activity_id='${activity.id}'">
+        <field column="event_instructors" name="event_instructors"/>
+        <field column="event_start" name="event_start"/>
+        <field column="event_finish" name="event_finish"/>
+      </entity>
+
+      <entity name="provider" query="select PRO.id AS provider_id, PRO.name AS provider_name from provider as PRO JOIN activity as ACT ON ACT.provider_id=PRO.id where ACT.id='${activity.id}'">
+        <field column="provider_id" name="provider_id"/>
+        <field column="provider_name" name="provider_name"/>
+        
+        <entity name="provider_coords" query="select CONCAT(PRO.latitude,',',PRO.latitude) as provider_coordinates from provider as PRO where PRO.id='${provider.id}' and PRO.latitude IS NOT NULL and PRO.longitude IS NOT NULL">
+          <field column="provider_coordinates" name="provider_coordinates"/>
+          <!-- <field column="provider_city" name="provider_city"/>
+          <field column="provider_state" name="provider_state"/>
+          <field column="provider_zip_code" name="provider_zip_code"/> -->
+        </entity>          
+
+        <entity name="vendor" query="select VEN.id AS vendor_id, VEN.online_reservation_supported AS online_reservation_supported from vendor as VEN JOIN provider as PRO ON PRO.vendor_id=VEN.id where PRO.id='${provider.provider_id}'">
+          <field column="vendor_id" name="vendor_id"/>
+          <field column="online_reservation_supported" name="online_reservation_supported"/>
+        </entity>        
+      </entity>
+      
+    </entity>
+  </document>
+</dataConfig>

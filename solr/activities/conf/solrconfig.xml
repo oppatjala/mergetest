@@ -629,12 +629,12 @@
        <str name="fl">*,score</str>
 
        <str name="qf">
-          name^10 catchall^1
+          catchall_location_category_provider^10 name^5 catchall^1
        </str>
        <str name="pf">
-          name^10
+          catchall_location_category_provider^10 name^5 catchall^1
        </str>
-       
+
        <str name="mm">3&lt;-1 5&lt;-2 6&lt;90%</str>
        <float name="tie">0.01</float>
        <int name="ps">50</int>
@@ -658,10 +658,10 @@
        <str name="fl">*,score</str>
 
        <str name="qf">
-          name
+          catchall_location_category_provider
        </str>
        <str name="pf">
-          name
+          catchall_location_category_provider
        </str>
        <str name="mm">3&lt;-1 5&lt;-2 6&lt;90%</str>
        <float name="tie">0.01</float>
@@ -689,8 +689,8 @@
       <int name="rows">10</int>
       <str name="fl">*,score</str>
 
-      <str name="mlt.fl">name</str>
-      <str name="mlt.qf">name^1</str>
+      <str name="mlt.fl">catchall_mlt</str>
+      <str name="mlt.qf">catchall_mlt^1</str>
       <str name="mlt.boost">true</str>
       <str name="mlt.minwl">3</str>
       <str name="mlt.mintf">1</str> 
@@ -728,6 +728,21 @@
   <!-- Update Request Handler -->
   <requestHandler name="/update" class="solr.UpdateRequestHandler"/>
 
+  <requestHandler name="/dataimport"
+                  class="org.apache.solr.handler.dataimport.DataImportHandler">
+    <lst name="defaults">
+      <lst name="datasource">
+         <str name="name">rw_db</str>
+         <str name="driver">com.mysql.jdbc.Driver</str>
+         <str name="url">jdbc:mysql://${solr.global.dataimport.db.host:}/${solr.global.dataimport.db.name:reservation}?zeroDateTimeBehavior=convertToNull</str>
+         <str name="user">${solr.global.dataimport.db.user:}</str>
+         <str name="password">${solr.global.dataimport.db.password:}</str>
+         <str name="encoding">UTF-8</str>
+      </lst>
+      <str name="config">dih-data-config.xml</str>
+    </lst>
+  </requestHandler>
+  
   <!-- for back compat with clients using /update/json and /update/csv -->  
   <requestHandler name="/update/json" class="solr.JsonUpdateRequestHandler">
         <lst name="defaults">
@@ -889,7 +904,7 @@
       <str name="name">default</str>
       <str name="field">catchall_spell</str>
       <str name="spellcheckIndexDir">spellchecker</str>
-      <str name="buildOnCommit">true</str>            
+      <str name="buildOnCommit">false</str>            
       <str name="distanceMeasure">org.apache.lucene.search.spell.LevensteinDistance</str>      
     </lst>
 

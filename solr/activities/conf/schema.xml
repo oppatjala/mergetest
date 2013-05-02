@@ -131,7 +131,6 @@
 		</fieldType>
   </types>
 
-
   <fields>
     <field name="id" type="string" indexed="true" stored="true" required="true"/>
     <field name="name" type="text_general" indexed="true" stored="true" required="true" termVectors="true"/>
@@ -148,10 +147,10 @@
     <field name="provider_id" type="string" indexed="true" stored="true" required="true"/> <!-- from Provider -->
     <field name="provider_name" type="text_general" indexed="true" stored="true" required="true"/> <!-- from Provider -->
     <field name="provider_name_alpha_sort" type="text_alpha_only_sort" indexed="true" stored="true" required="true"/> <!-- Do not set this, copy fields set this --> 
-    <field name="provider_location" type="lat_lon" indexed="true" stored="true" required="true"/> <!-- from Provider -->
+    <field name="provider_coordinates" type="lat_lon" indexed="true" stored="true" required="true"/> <!-- from Provider -->
     <field name="provider_city" type="string" indexed="true" stored="true" required="false"/> <!-- from Provider address-->
     <field name="provider_state" type="string" indexed="true" stored="true" required="false"/> <!-- from Provider address-->
-    <field name="provider_zip" type="string" indexed="true" stored="true" required="false"/> <!-- from Provider address-->    
+    <field name="provider_zip_code" type="string" indexed="true" stored="true" required="false"/> <!-- from Provider address-->    
 
     <field name="vendor_id" type="string" indexed="true" stored="true" required="true"/>
 
@@ -169,6 +168,8 @@
 
     <!-- catchall fields -->
     <field name="catchall" type="text_general" indexed="true" stored="false" multiValued="true"/> <!-- Do not set this, copy fields set this -->
+    <field name="catchall_location_category_provider" type="text_general" indexed="true" stored="false" multiValued="true"/> <!-- Do not set this, copy fields set this -->
+    <field name="catchall_mlt" type="text_general" indexed="true" stored="false" multiValued="true"/> <!-- Do not set this, copy fields set this -->
     <field name="catchall_spell" type="text_spell" indexed="true" stored="false" multiValued="true"/> <!-- Do not set this, copy fields set this -->
     
     <!-- Required by the system to enable clustering -->
@@ -187,11 +188,28 @@
   <solrQueryParser defaultOperator="OR"/>
 
   <copyField source="name" dest="catchall"/>
-  <copyField source="name" dest="catchall_spell"/>
-  <copyField source="name" dest="name_alpha_sort"/>
   <copyField source="description" dest="catchall"/>
-  <copyField source="description" dest="catchall_spell"/>
   <copyField source="provider_name" dest="catchall"/>
-  <copyField source="provider_name" dest="provider_name_alpha_sort"/>  
+  <copyField source="provider_city" dest="catchall"/>
+  <copyField source="provider_state" dest="catchall"/>
+  <copyField source="provider_zip_code" dest="catchall"/>
   <copyField source="category_names" dest="catchall"/>
+
+  <copyField source="provider_name" dest="catchall_location_category_provider"/>
+  <copyField source="provider_city" dest="catchall_location_category_provider"/>
+  <copyField source="provider_zip_code" dest="catchall_location_category_provider"/>
+  <copyField source="category_names" dest="catchall_location_category_provider"/>
+
+  <copyField source="name" dest="catchall_mlt"/>
+  <copyField source="description" dest="catchall_mlt"/>
+  <copyField source="category_names" dest="catchall_mlt"/>  
+
+  <copyField source="name" dest="catchall_spell"/>
+  <copyField source="description" dest="catchall_spell"/>
+  <copyField source="provider_name" dest="catchall_spell"/>
+  <copyField source="provider_city" dest="catchall_spell"/>
+  <copyField source="category_names" dest="catchall_spell"/>  
+
+  <copyField source="name" dest="name_alpha_sort"/>
+  <copyField source="provider_name" dest="provider_name_alpha_sort"/>
 </schema>
