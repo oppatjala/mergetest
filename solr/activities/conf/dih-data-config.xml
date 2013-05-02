@@ -1,9 +1,10 @@
 <dataConfig>
   <document>
-    <!-- TODO replace this with select * from activity where status=0 -->
-    <entity name="activity" pk="id" dataSource="rw_db"
-        query="select * from activity" 
-        deltaQuery="select * from activity where last_modified_date > '${dataimporter.last_index_time}'">
+    <entity name="activity" pk="id" dataSource="rw_db" onError="skip"
+        query="select * from activity where status=0" 
+        deltaQuery="select * from activity where last_modified_date > '${dataimporter.last_index_time}'"
+        deltaImportQuery="select * from activity where id='${dataimporter.delta.id}'"
+        deletedPkQuery="select id from activity where status!=0">
 
       <field column="id" name="id"/>
       <field column="name" name="name"/>
