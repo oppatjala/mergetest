@@ -166,6 +166,9 @@
     <field name="last_modified_date" type="date" indexed="true" stored="true" required="true"/>
     <field name="indexed_date" type="date" indexed="true" stored="true" default="NOW"/> <!-- Do not set this, the index will set this -->
 
+<!-- catchall field, containing all other searchable text fields (implemented via copyField further on in this schema  -->
+   <field name="text" type="text_general" indexed="true" stored="false" multiValued="true"/>
+
     <!-- catchall fields -->
     <field name="catchall" type="text_general" indexed="true" stored="false" multiValued="true"/> <!-- Do not set this, copy fields set this -->
     <field name="catchall_location_category_provider" type="text_general" indexed="true" stored="false" multiValued="true"/> <!-- Do not set this, copy fields set this -->
