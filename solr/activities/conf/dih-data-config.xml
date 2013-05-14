@@ -12,6 +12,8 @@
       <field column="cost" name="cost"/>
       <field column="max_capacity" name="max_capacity"/>
       <field column="num_open" name="num_open"/>
+      <field column="max_age" name="max_age"/>
+      <field column="min_age" name="min_age"/>
       <field column="membership_required" name="membership_required"/>
       <field column="status" name="status"/>
       <field column="start_date" name="start_date"/>

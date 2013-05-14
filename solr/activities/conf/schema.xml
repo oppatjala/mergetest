@@ -141,6 +141,8 @@
     <field name="cost" type="currency" indexed="true" stored="true" required="false"/>
     <field name="max_capacity" type="int" indexed="true" stored="true" required="false"/>
     <field name="num_open" type="int" indexed="true" stored="true" required="false"/>
+    <field name="max_age" type="int" indexed="true" stored="true" required="false"/>
+    <field name="min_age" type="int" indexed="true" stored="true" required="false"/>
     <field name="membership_required" type="boolean" indexed="true" stored="true" required="false"/>
     <field name="online_reservation_supported" type="boolean" indexed="true" stored="true" required="false"/>  <!-- from Vendor -->
 
@@ -165,9 +167,6 @@
     <field name="end_date" type="date" indexed="true" stored="true" required="false"/>
     <field name="last_modified_date" type="date" indexed="true" stored="true" required="true"/>
     <field name="indexed_date" type="date" indexed="true" stored="true" default="NOW"/> <!-- Do not set this, the index will set this -->
-
-<!-- catchall field, containing all other searchable text fields (implemented via copyField further on in this schema  -->
-   <field name="text" type="text_general" indexed="true" stored="false" multiValued="true"/>
 
     <!-- catchall fields -->
     <field name="catchall" type="text_general" indexed="true" stored="false" multiValued="true"/> <!-- Do not set this, copy fields set this -->
