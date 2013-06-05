@@ -25,21 +25,21 @@
         <field column="category_names" name="category_names"/>
       </entity>
 
-      <entity name="events" dataSource="rw_db" query="select AE.instructor AS event_instructors, AE.event_start AS event_start, AE.event_finish AS event_finish from activity_event as AE where AE.activity_id='${activity.id}'">
-        <field column="event_instructors" name="event_instructors"/>
-        <field column="event_start" name="event_start"/>
-        <field column="event_finish" name="event_finish"/>
+      <entity name="events" dataSource="rw_db" query="select AE.instructor AS event_instructors, AE.event_start AS event_start, AE.event_finish AS event_finish from activity_event as AE where AE.activity_id='${activity.id}' order by AE.event_start asc limit 1">
+        <field column="event_instructor" name="first_event_instructor"/>
+        <field column="event_start" name="first_event_start"/>
+        <field column="event_finish" name="first_event_start"/>
       </entity>
 
-      <entity name="provider" dataSource="rw_db" query="select PRO.id AS provider_id, PRO.name AS provider_name from provider as PRO JOIN activity as ACT ON ACT.provider_id=PRO.id where ACT.id='${activity.id}'">
+      <entity name="provider" dataSource="rw_db" query="select PRO.id AS provider_id, PRO.name AS provider_name, PRO.service_address_id as address_id from provider as PRO JOIN activity as ACT ON ACT.provider_id=PRO.id where ACT.id='${activity.id}'">
         <field column="provider_id" name="provider_id"/>
         <field column="provider_name" name="provider_name"/>
         
-        <entity name="provider_coords" dataSource="rw_db" query="select CONCAT(PRO.latitude,',',PRO.longitude) as provider_coordinates from provider as PRO where PRO.id='${provider.provider_id}' and PRO.latitude IS NOT NULL and PRO.longitude IS NOT NULL">
+        <entity name="provider_coords" dataSource="rw_db" query="select CONCAT(ADDR.latitude,',',ADDR.longitude) as provider_coordinates, ADDR.city as provider_city, ADDR.address_state as provider_state, ADDR.zip_code as provider_zip_code from service_address as ADDR where ADDR.id='${provider.address_id}' and ADDR.latitude IS NOT NULL and ADDR.longitude IS NOT NULL">
           <field column="provider_coordinates" name="provider_coordinates"/>
-          <!-- <field column="provider_city" name="provider_city"/>
+          <field column="provider_city" name="provider_city"/>
           <field column="provider_state" name="provider_state"/>
-          <field column="provider_zip_code" name="provider_zip_code"/> -->
+          <field column="provider_zip_code" name="provider_zip_code"/>
         </entity>          
 
         <entity name="vendor" dataSource="rw_db" query="select VEN.id AS vendor_id, VEN.online_reservation_supported AS online_reservation_supported from vendor as VEN JOIN provider as PRO ON PRO.vendor_id=VEN.id where PRO.id='${provider.provider_id}'">

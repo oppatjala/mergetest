@@ -156,10 +156,9 @@
 
     <field name="vendor_id" type="string" indexed="true" stored="true" required="true"/>
 
-    <field name="event_instructors" type="string" indexed="true" stored="true" required="false" multiValued="true"/>    
-    <!-- NOTE: THIS IS NOT THE FINAL FORMAT FOR STORING THIS DATA-->
-    <field name="event_start" type="date" indexed="true" stored="true" required="false" multiValued="true"/>
-    <field name="event_finish" type="date" indexed="true" stored="true" required="false" multiValued="true"/>
+    <field name="first_event_instructor" type="string" indexed="true" stored="true" required="false"/>
+    <field name="first_event_start" type="date" indexed="true" stored="true" required="false"/>
+    <field name="first_event_finish" type="date" indexed="true" stored="true" required="false"/>
 
     <!-- These fields track the status of the activity entry, they do not specify event data -->
     <field name="status" type="int" indexed="true" stored="true" required="true"/>
