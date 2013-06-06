@@ -624,6 +624,7 @@
        <str name="wt">json</str>
        <str name="indent">true</str>
        
+       <str name="uf">-*</str>       
        <str name="df">name</str>
        <str name="defType">edismax</str>
        <str name="q.alt">*:*</str>
