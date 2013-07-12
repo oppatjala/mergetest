@@ -139,6 +139,9 @@
     <field name="category_ids" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
     <field name="category_names" type="text_general" indexed="true" stored="true" required="false" multiValued="true"/>
     <field name="cost" type="currency" indexed="true" stored="true" required="false"/>
+    
+    <!-- TODO: remove this post solr 4.4 upgrade -->
+    <field name="cost_facetable" type="float" indexed="true" stored="false" required="false"/>    
     <field name="max_capacity" type="int" indexed="true" stored="true" required="false"/>
     <field name="num_open" type="int" indexed="true" stored="true" required="false"/>
     <field name="max_age" type="int" indexed="true" stored="true" required="false"/>
@@ -198,6 +201,9 @@
   <copyField source="provider_state" dest="catchall"/>
   <copyField source="provider_zip_code" dest="catchall"/>
   <copyField source="category_names" dest="catchall"/>
+
+  <!-- TODO: Remove this post solr 4.4 upgrade -->
+  <copyField source="cost" dest="cost_facetable"/>
 
   <copyField source="provider_name" dest="catchall_location_category_provider"/>
   <copyField source="provider_city" dest="catchall_location_category_provider"/>
