@@ -176,6 +176,9 @@
     <field name="catchall_mlt" type="text_general" indexed="true" stored="false" multiValued="true"/> <!-- Do not set this, copy fields set this -->
     <field name="catchall_spell" type="text_spell" indexed="true" stored="false" multiValued="true"/> <!-- Do not set this, copy fields set this -->
     
+    <!-- This is used to provide a key for grouping on -->
+    <field name="activity_name_and_provider_id" type="string" indexed="true" stored="false" multiValued="false"/>
+    
     <!-- Required to store the sub-coordinates of the *_coordinates fields -->
     <dynamicField name="*_lat_lon"  type="double" indexed="true"  stored="false" />
     
