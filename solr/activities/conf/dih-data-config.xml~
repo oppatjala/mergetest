@@ -42,7 +42,7 @@
         
         <field column="activity_name_and_provider_id" template="${provider.provider_id}_${activity.name}"/>
 
-        <entity name="provider_coords" dataSource="rw_db" query="select CONCAT(ADDR.latitude,',',ADDR.longitude) as provider_coordinates, ADDR.city as provider_city, ADDR.address_state as provider_state, ADDR.zip_code as provider_zip_code from service_address as ADDR where ADDR.id=if('${activity.service_address_id}' IS NULL, '${provider.address_id}', '${activity.service_address_id}') and ADDR.latitude IS NOT NULL and ADDR.longitude IS NOT NULL">
+        <entity name="provider_coords" dataSource="rw_db" query="select CONCAT(ADDR.latitude,',',ADDR.longitude) as provider_coordinates, ADDR.city as provider_city, ADDR.address_state as provider_state, ADDR.zip_code as provider_zip_code from service_address as ADDR where ADDR.id='${provider.address_id}' and ADDR.latitude IS NOT NULL and ADDR.longitude IS NOT NULL">
           <field column="provider_coordinates" name="provider_coordinates"/>
           <field column="provider_city" name="provider_city"/>
           <field column="provider_state" name="provider_state"/>
