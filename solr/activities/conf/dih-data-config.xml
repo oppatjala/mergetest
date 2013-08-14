@@ -20,7 +20,7 @@
       <field column="end_date" name="end_date"/>
       <field column="last_modified_date" name="last_modified_date"/>
 
-      <entity name="leaf_categories" dataSource="rw_db" query="select CAT.id AS leaf_category_ids, CAT.name AS leaf_category_names, CAT.parent_id AS parent_ids, from category as CAT JOIN activity_categories as AC ON CAT.id=AC.category_id JOIN activity as ACT ON AC.activity_id=ACT.id where ACT.id='${activity.id}' and CAT.depth=2">
+      <entity name="leaf_categories" dataSource="rw_db" query="select CAT.id AS leaf_category_ids, CAT.name AS leaf_category_names, CAT.parent_id AS parent_ids from category as CAT JOIN activity_categories as AC ON CAT.id=AC.category_id JOIN activity as ACT ON AC.activity_id=ACT.id where ACT.id='${activity.id}' and CAT.depth=2">
         <field column="leaf_category_ids" name="leaf_category_ids"/>
         <field column="leaf_category_names" name="leaf_category_names"/>
         
