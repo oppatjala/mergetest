@@ -79,7 +79,7 @@
         <!-- KeywordTokenizer does no actual tokenizing, so the entire
              input string is preserved as a single token
           -->
-				<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\.,;:\-_])" replacement=" " replace="all"/>
+				<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\.,;:\-_])" replacement=" "/>
         <tokenizer class="solr.KeywordTokenizerFactory"/>
         <!-- The LowerCase TokenFilter does what you expect, which can be
              when you want your sorting to be case insensitive
@@ -93,25 +93,25 @@
     <!-- Prefix N-Gram type, used for autocomplete functionality -->
 		<fieldType name="autocomplete_edge" class="solr.TextField">
 			<analyzer type="index">
-				<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\.,;:\-_])" replacement=" " replace="all"/>
+				<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\.,;:\-_])" replacement=" "/>
 				<charFilter class="solr.MappingCharFilterFactory" mapping="mapping-ISOLatin1Accent.txt"/>
 				<tokenizer class="solr.KeywordTokenizerFactory"/>
 				<filter class="solr.LowerCaseFilterFactory"/>
 				<filter class="solr.EdgeNGramFilterFactory" maxGramSize="30" minGramSize="1"/>
 			</analyzer>
 			<analyzer type="query">
-				<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\.,;:\-_])" replacement=" " replace="all"/>
+				<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\.,;:\-_])" replacement=" "/>
 				<charFilter class="solr.MappingCharFilterFactory" mapping="mapping-ISOLatin1Accent.txt"/>
 				<tokenizer class="solr.KeywordTokenizerFactory"/>
 				<filter class="solr.LowerCaseFilterFactory"/>
-				<filter class="solr.PatternReplaceFilterFactory" pattern="^(.{30})(.*)?" replacement="$1" replace="all"/>
+				<filter class="solr.PatternReplaceFilterFactory" pattern="^(.{30})(.*)?" replacement="$1"/>
 			</analyzer>
 		</fieldType> 
 		
     <!-- Internal N-Gram type, used for autocomplete functionality -->
 		<fieldType name="autocomplete_ngram" class="solr.TextField">
 			<analyzer type="index">
-				<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\.,;:\-_])" replacement=" " replace="all"/>
+				<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\.,;:\-_])" replacement=" "/>
 				<charFilter class="solr.MappingCharFilterFactory" mapping="mapping-ISOLatin1Accent.txt"/>
 				<tokenizer class="solr.WhitespaceTokenizerFactory"/>
         <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="0" catenateNumbers="0" catenateAll="0" splitOnCaseChange="1"/>
@@ -120,13 +120,13 @@
         <filter class="solr.EdgeNGramFilterFactory" maxGramSize="20" minGramSize="1"/>
 			</analyzer>
 			<analyzer type="query">
-				<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\.,;:\-_])" replacement=" " replace="all"/>
+				<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\.,;:\-_])" replacement=" "/>
 				<charFilter class="solr.MappingCharFilterFactory" mapping="mapping-ISOLatin1Accent.txt"/>
 				<tokenizer class="solr.WhitespaceTokenizerFactory"/>
         <filter class="solr.WordDelimiterFilterFactory" generateWordParts="0" generateNumberParts="0" catenateWords="0" catenateNumbers="0" catenateAll="0" splitOnCaseChange="0"/>
         <filter class="solr.LowerCaseFilterFactory"/>
         <filter class="solr.ShingleFilterFactory" maxShingleSize="2" minShingleSize="2" outputUnigramsIfNoShingles="true" outputUnigrams="false" tokenSeparator=" "/>
-        <filter class="solr.PatternReplaceFilterFactory" pattern="^(.{20})(.*)?" replacement="$1" replace="all"/>
+        <filter class="solr.PatternReplaceFilterFactory" pattern="^(.{20})(.*)?" replacement="$1"/>
 			</analyzer>
 		</fieldType>
   </types>
