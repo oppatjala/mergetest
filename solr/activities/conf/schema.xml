@@ -136,8 +136,10 @@
     <field name="name" type="text_general" indexed="true" stored="true" required="true" termVectors="true"/>
     <field name="name_alpha_sort" type="text_alpha_only_sort" indexed="true" stored="false"/> <!-- Do not set this, copy fields set this -->
     <field name="description" type="text_general" indexed="true" stored="true" required="false"/>
-    <field name="category_ids" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
-    <field name="category_names" type="text_general" indexed="true" stored="true" required="false" multiValued="true"/>
+    <field name="leaf_category_ids" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
+    <field name="leaf_category_names" type="text_general" indexed="true" stored="true" required="false" multiValued="true"/>
+    <field name="top_level_category_ids" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
+    <field name="top_level_category_names" type="text_general" indexed="true" stored="true" required="false" multiValued="true"/>
     <field name="cost" type="currency" indexed="true" stored="true" required="false"/>
     
     <!-- TODO: remove this post solr 4.4 upgrade -->
@@ -203,7 +205,8 @@
   <copyField source="provider_city" dest="catchall"/>
   <copyField source="provider_state" dest="catchall"/>
   <copyField source="provider_zip_code" dest="catchall"/>
-  <copyField source="category_names" dest="catchall"/>
+  <copyField source="top_level_category_names" dest="catchall"/>
+  <copyField source="leaf_category_names" dest="catchall"/>
 
   <!-- TODO: Remove this post solr 4.4 upgrade -->
   <copyField source="cost" dest="cost_facetable"/>
@@ -211,17 +214,20 @@
   <copyField source="provider_name" dest="catchall_location_category_provider"/>
   <copyField source="provider_city" dest="catchall_location_category_provider"/>
   <copyField source="provider_zip_code" dest="catchall_location_category_provider"/>
-  <copyField source="category_names" dest="catchall_location_category_provider"/>
+  <copyField source="top_level_category_names" dest="catchall_location_category_provider"/>
+  <copyField source="leaf_category_names" dest="catchall_location_category_provider"/>
 
   <copyField source="name" dest="catchall_mlt"/>
   <copyField source="description" dest="catchall_mlt"/>
-  <copyField source="category_names" dest="catchall_mlt"/>  
+  <copyField source="top_level_category_names" dest="catchall_mlt"/>
+  <copyField source="leaf_category_names" dest="catchall_mlt"/>
 
   <copyField source="name" dest="catchall_spell"/>
   <copyField source="description" dest="catchall_spell"/>
   <copyField source="provider_name" dest="catchall_spell"/>
   <copyField source="provider_city" dest="catchall_spell"/>
-  <copyField source="category_names" dest="catchall_spell"/>  
+  <copyField source="top_level_category_names" dest="catchall_spell"/>
+  <copyField source="leaf_category_names" dest="catchall_spell"/>
 
   <copyField source="name" dest="name_alpha_sort"/>
   <copyField source="provider_name" dest="provider_name_alpha_sort"/>
