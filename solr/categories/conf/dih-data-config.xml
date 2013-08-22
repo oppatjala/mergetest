@@ -1,0 +1,17 @@
+<dataConfig>
+  <document>
+    <entity name="category" pk="id" dataSource="rw_db" transformer="RegexTransformer" query="select * from category">
+
+      <field column="id" name="id"/>
+      <field column="parent_id" name="parent_id"/>
+      <entity name="children_ids" dataSource="rw_db" query="select CHILD.id as child_id from category AS CHILD JOIN category AS PARENT on CHILD.parent_id=PARENT.id where PARENT.id='${category.id}'">
+        <field column="child_id" name="children_ids"/>
+      </entity>
+      
+      <field column="depth" name="depth"/>
+      <field column="name" name="name"/>
+      <field column="synonyms" name="synonyms" splitBy=","/>
+      <field column="defining_terms" name="defining_terms" splitBy=","/>
+    </entity>
+  </document>
+</dataConfig>
