@@ -701,7 +701,7 @@
     </lst>
   </requestHandler>
 
-  <requestHandler name="/autocomplete" class="solr.SearchHandler">
+  <!-- <requestHandler name="/autocomplete" class="solr.SearchHandler">
      <lst name="defaults">
        <str name="wt">json</str>
       <str name="echoParams">explicit</str>
@@ -725,7 +725,7 @@
       <str>stats</str>                        
       <str>debug</str>      
     </arr>    
-  </requestHandler>
+  </requestHandler> -->
 
   <!-- Update Request Handler -->
   <requestHandler name="/update" class="solr.UpdateRequestHandler"/>
