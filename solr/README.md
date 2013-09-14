@@ -6,6 +6,7 @@
 * README.md - Documentation.
 * logrotate.txt - Specifies Tomcat server log rotation.
 * activities/ - Config directory for the activities index. This powers 'search', 'morelikethis', 'autocomplete', and 'spellcheck' functionality.
+* categories/ - Config directory for the categories index. This powers quick-n'-dirty classification.
 
 ## Production Usage - SOLR CLOUD SETUP ONLY
 
@@ -38,8 +39,8 @@ java -cp $(echo $APACHE_SOLR_HOME/example/solr-webapp/WEB-INF/lib/*.jar | tr ' '
 
 * Create the new collections
 ```
-curl 'http://solr-public.staging.itivitykids.com:9000/solr/admin/cores?action=CREATE&name=activities_core&collection=activities&collection.configName=activities'
 curl 'http://solr-public.staging.itivitykids.com:9000/solr/admin/cores?action=CREATE&name=activities&collection=activities&collection.configName=activities'
+curl 'http://solr-public.staging.itivitykids.com:9000/solr/admin/cores?action=CREATE&name=categories&collection=categories&collection.configName=categories'
 ```
 
 * Restart the Tomcat application server to clear the bootstrap errors
@@ -47,7 +48,7 @@ curl 'http://solr-public.staging.itivitykids.com:9000/solr/admin/cores?action=CR
 * Check the status of the new collections
 ```
 curl http://solr-public.staging.itivitykids.com:9000/solr/admin/cores?action=STATUS&core=activities
-curl http://solr-public.staging.itivitykids.com:9000/solr/admin/cores?action=STATUS&core=activities
+curl http://solr-public.staging.itivitykids.com:9000/solr/admin/cores?action=STATUS&core=categories
 curl http://solr-public.staging.itivitykids.com:9000/solr
 ```
 
@@ -60,6 +61,15 @@ java -cp $(echo $APACHE_SOLR_HOME/example/solr-webapp/WEB-INF/lib/*.jar | tr ' '
   -zkhost zk1-public.production.itivitykids.com:9100,zk2-public.production.itivitykids.com:9100,zk3-public.production.itivitykids.com:9100 \
   -confdir itk_reservation_solr/activities/conf \
   -confname activities \
+  -solrhome itk_reservation_solr/
+```
+
+```
+java -cp $(echo $APACHE_SOLR_HOME/example/solr-webapp/WEB-INF/lib/*.jar | tr ' ' ':') org.apache.solr.cloud.ZkCLI \
+  -cmd upconfig \
+  -zkhost zk1-public.production.itivitykids.com:9100,zk2-public.production.itivitykids.com:9100,zk3-public.production.itivitykids.com:9100 \
+  -confdir itk_reservation_solr/categories/conf \
+  -confname categories \
   -solrhome itk_reservation_solr/
 ```
 
