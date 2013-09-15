@@ -74,3 +74,9 @@ java -cp $(echo $APACHE_SOLR_HOME/example/solr-webapp/WEB-INF/lib/*.jar | tr ' '
   -solrhome itk_reservation_solr/
 ```
 
+
+
+## Querying
+
+* Category Autocomplete
+  * http://localhost:8983/solr/categories/autocomplete?fl=synonyms,name&hl.fl=name_auto_start_ngrams,synonyms_auto_start_ngrams&hl=true&q=%22G%22

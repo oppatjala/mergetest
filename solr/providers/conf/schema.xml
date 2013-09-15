@@ -99,6 +99,7 @@
 			</analyzer>
 		</fieldType>
   </types>
+  
   <fields>
     <field name="id" type="string" indexed="true" stored="true" required="true"/>
     <field name="vendor_id" type="string" indexed="true" stored="true" required="false"/>
