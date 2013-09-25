@@ -12,11 +12,10 @@
       <field column="name" name="name"/>
       <field column="description" name="description"/>
 
-  <!-- UNCOMMENT WHEN WE COMPLETE US https://www.pivotaltracker.com/story/show/56995388 -->
-      <!-- <entity name="categories" dataSource="rw_db" query="select CAT.id AS category_ids, CAT.name AS category_names from category as CAT JOIN provider_categories as PC ON CAT.id=PC.category_id JOIN provider as PRO ON PC.provider_id=PRO.id where PRO.id='${provider.id}'">
+      <entity name="categories" dataSource="rw_db" query="select CAT.id AS category_ids, CAT.name AS category_names from category as CAT JOIN provider_categories as PC ON CAT.id=PC.category_id JOIN provider as PRO ON PC.provider_id=PRO.id where PRO.id='${provider.id}'">
         <field column="category_ids" name="category_ids"/>
         <field column="category_names" name="category_names"/>
-      </entity> -->
+      </entity>
       <field column="email" name="email"/>
       <field column="online_reservation_supported" name="online_reservation_supported"/>
 
