@@ -24,13 +24,13 @@
         <field column="leaf_category_ids" name="leaf_category_ids"/>
         <field column="leaf_category_names" name="leaf_category_names"/>
         
-        <entity name="top_level_categories" dataSource="rw_db" query="select distinct(CAT.parent_id) AS top_level_category_ids, PARENT_CAT.name AS top_level_category_names from category as CAT JOIN category as PARENT_CAT on CAT.parent_id=PARENT_CAT.id where CAT.id IN (${leaf_categories.parent_ids})">
+        <entity name="top_level_categories" dataSource="rw_db" query="select distinct(CAT.parent_id) AS top_level_category_ids, PARENT_CAT.name AS top_level_category_names from category as CAT JOIN category as PARENT_CAT on CAT.parent_id=PARENT_CAT.id where PARENT_CAT.id IN (${leaf_categories.parent_ids})">
           <field column="top_level_category_ids" name="top_level_category_ids"/>
           <field column="top_level_category_names" name="top_level_category_names"/>
         </entity>        
       </entity>
 
-      <entity name="events" dataSource="rw_db" query="select AE.instructor AS event_instructors, AE.event_start AS event_start, AE.event_finish AS event_finish from activity_event as AE where AE.activity_id='${activity.id}' order by AE.event_start asc limit 1">
+      <entity name="events" dataSource="rw_db" query="select AE.instructor AS event_instructor, AE.event_start AS event_start, AE.event_finish AS event_finish from activity_event as AE where AE.activity_id='${activity.id}' and AE.status=1 order by AE.event_start asc limit 1">
         <field column="event_instructor" name="first_event_instructor"/>
         <field column="event_start" name="first_event_start"/>
         <field column="event_finish" name="first_event_finish"/>

@@ -1,0 +1,37 @@
+<dataConfig>
+  <document>
+    <entity name="provider" pk="id" dataSource="rw_db" onError="skip"
+        query="select * from provider where status=1" 
+        deltaQuery="select * from provider where last_modified_date > '${dataimporter.last_index_time}'"
+        deltaImportQuery="select * from provider where id='${dataimporter.delta.id}'"
+        deletedPkQuery="select id from provider where status!=1">
+
+      <field column="id" name="id"/>
+      <field column="vendor_id" name="vendor_id"/>
+      <field column="external_id" name="external_id"/>
+      <field column="name" name="name"/>
+      <field column="description" name="description"/>
+
+  <!-- UNCOMMENT WHEN WE COMPLETE US https://www.pivotaltracker.com/story/show/56995388 -->
+      <!-- <entity name="categories" dataSource="rw_db" query="select CAT.id AS category_ids, CAT.name AS category_names from category as CAT JOIN provider_categories as PC ON CAT.id=PC.category_id JOIN provider as PRO ON PC.provider_id=PRO.id where PRO.id='${provider.id}'">
+        <field column="category_ids" name="category_ids"/>
+        <field column="category_names" name="category_names"/>
+      </entity> -->
+      <field column="email" name="email"/>
+      <field column="online_reservation_supported" name="online_reservation_supported"/>
+
+      <entity name="provider_loc" dataSource="rw_db" query="select ADDR.city as city, ADDR.address_state as state, ADDR.zip_code as zip_code from service_address as ADDR where ADDR.id='${provider.service_address_id}'">
+        <field column="city" name="city"/>
+        <field column="state" name="state"/>
+        <field column="zip_code" name="zip_code"/>
+      </entity>
+
+      <entity name="provider_coords" dataSource="rw_db" query="select CONCAT(ADDR.latitude,',',ADDR.longitude) as coordinates from service_address as ADDR where ADDR.id='${provider.service_address_id}' and ADDR.latitude IS NOT NULL and ADDR.longitude IS NOT NULL">
+        <field column="coordinates" name="coordinates"/>
+      </entity>
+      
+      <field column="status" name="status"/>
+      <field column="last_modified_date" name="last_modified_date"/>
+    </entity>
+  </document>
+</dataConfig>

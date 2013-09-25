@@ -6,6 +6,7 @@
 * README.md - Documentation.
 * logrotate.txt - Specifies Tomcat server log rotation.
 * activities/ - Config directory for the activities index. This powers 'search', 'morelikethis', 'autocomplete', and 'spellcheck' functionality.
+* providers/ - Config directory for the providers index. This powers search and autocomplete.
 * categories/ - Config directory for the categories index. This powers quick-n'-dirty classification.
 
 ## Production Usage - SOLR CLOUD SETUP ONLY
@@ -73,3 +74,9 @@ java -cp $(echo $APACHE_SOLR_HOME/example/solr-webapp/WEB-INF/lib/*.jar | tr ' '
   -solrhome itk_reservation_solr/
 ```
 
+
+
+## Querying
+
+* Category Autocomplete
+  * http://localhost:8983/solr/categories/autocomplete?fl=synonyms,name&hl.fl=name_auto_start_ngrams,synonyms_auto_start_ngrams&hl=true&q=%22G%22
