@@ -81,11 +81,13 @@
 		
     <fieldType name="text_subphrase_match" class="solr.TextField" positionIncrementGap="100">
       <analyzer type="index">
+				<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\.,;:\-_+*/])" replacement=" "/>
         <tokenizer class="solr.KeywordTokenizerFactory"/>
         <filter class="solr.TrimFilterFactory"/>
         <filter class="solr.LowerCaseFilterFactory"/>
       </analyzer>
       <analyzer type="query">
+				<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\.,;:\-_+*/])" replacement=" "/>
         <tokenizer class="solr.WhitespaceTokenizerFactory"/>
         <filter class="solr.TrimFilterFactory"/>
         <filter class="solr.LowerCaseFilterFactory"/>
