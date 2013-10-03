@@ -110,8 +110,10 @@
     <field name="name_auto_start_ngrams" type="autocomplete_edge" indexed="true" stored="true" multiValued="false" termVectors="true"/> <!-- Do not set this, copy fields set this -->
     <field name="name_auto_all_ngrams" type="autocomplete_ngram" indexed="true" stored="true" multiValued="false" termVectors="true"/> <!-- Do not set this, copy fields set this -->
     <field name="description" type="text_general" indexed="true" stored="true" required="false"/>
-    <field name="category_ids" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
-    <field name="category_names" type="text_general" indexed="true" stored="true" required="false" multiValued="true"/>
+    <field name="leaf_category_ids" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
+    <field name="leaf_category_names" type="text_general" indexed="true" stored="true" required="false" multiValued="true"/>
+    <field name="top_level_category_ids" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
+    <field name="top_level_category_names" type="text_general" indexed="true" stored="true" required="false" multiValued="true"/>
 
     <field name="email" type="string" indexed="true" stored="true" required="false"/>
     <field name="online_reservation_supported" type="boolean" indexed="true" stored="true" required="false"/>
@@ -121,6 +123,7 @@
     <field name="zip_code" type="string" indexed="true" stored="true" required="false"/>
     
     <field name="status" type="int" indexed="true" stored="true" required="true"/>
+    <field name="created_date" type="date" indexed="true" stored="true" required="true"/>
     <field name="last_modified_date" type="date" indexed="true" stored="true" required="true"/>
     <field name="indexed_date" type="date" indexed="true" stored="true" default="NOW"/> <!-- Do not set this, the index will set this -->
 
@@ -147,11 +150,13 @@
   <solrQueryParser defaultOperator="OR"/>
 
   <copyField source="name" dest="catchall_name_category"/>
-  <copyField source="category_names" dest="catchall_name_category"/>
+  <copyField source="top_level_category_names" dest="catchall_name_category"/>
+  <copyField source="leaf_category_names" dest="catchall_name_category"/>
 
   <copyField source="name" dest="catchall"/>
   <copyField source="description" dest="catchall"/>
-  <copyField source="category_names" dest="catchall"/>
+  <copyField source="top_level_category_names" dest="catchall"/>
+  <copyField source="leaf_category_names" dest="catchall"/>
   <copyField source="city" dest="catchall"/>
   <copyField source="zip_code" dest="catchall"/>
 

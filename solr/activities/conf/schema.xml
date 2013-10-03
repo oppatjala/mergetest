@@ -169,6 +169,7 @@
     <field name="status" type="int" indexed="true" stored="true" required="true"/>
     <field name="start_date" type="date" indexed="true" stored="true" required="false"/>
     <field name="end_date" type="date" indexed="true" stored="true" required="false"/>
+    <field name="created_date" type="date" indexed="true" stored="true" required="true"/>
     <field name="last_modified_date" type="date" indexed="true" stored="true" required="true"/>
     <field name="indexed_date" type="date" indexed="true" stored="true" default="NOW"/> <!-- Do not set this, the index will set this -->
 
