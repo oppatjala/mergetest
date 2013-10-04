@@ -630,10 +630,10 @@
        <str name="fl">*,score</str>
 
        <str name="qf">
-          name^5 synonyms^3 defining_terms^1
+          synonyms^3 defining_terms^1
        </str>
        <str name="pf">
-          name^5 synonyms^3 defining_terms^1
+          synonyms^3 defining_terms^1
        </str>
 
        <str name="mm">1</str>

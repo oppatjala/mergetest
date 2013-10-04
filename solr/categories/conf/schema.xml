@@ -77,7 +77,23 @@
 				<filter class="solr.LowerCaseFilterFactory"/>
 				<filter class="solr.PatternReplaceFilterFactory" pattern="^(.{30})(.*)?" replacement="$1"/>
 			</analyzer>
-		</fieldType> 		
+		</fieldType>
+		
+    <fieldType name="text_subphrase_match" class="solr.TextField" positionIncrementGap="100">
+      <analyzer type="index">
+				<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\.,;:\-_+*/])" replacement=" "/>
+        <tokenizer class="solr.KeywordTokenizerFactory"/>
+        <filter class="solr.TrimFilterFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+      </analyzer>
+      <analyzer type="query">
+				<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\.,;:\-_+*/])" replacement=" "/>
+        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <filter class="solr.TrimFilterFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.ShingleFilterFactory" maxShingleSize="4" minShingleSize="2" outputUnigramsIfNoShingles="true" outputUnigrams="true" tokenSeparator=" "/>
+      </analyzer>
+    </fieldType>
   </types>
 
   <fields>
@@ -93,8 +109,8 @@
     <field name="synonyms_auto_start_ngrams" type="autocomplete_edge" indexed="true" stored="true" multiValued="true" termVectors="true"/> <!-- Do not set this, copy fields set this -->
 
     
-    <field name="synonyms" type="text_general" indexed="true" stored="true" required="false" multiValued="true" termVectors="true"/>
-    <field name="defining_terms" type="text_general" indexed="true" stored="true" required="false" multiValued="true" termVectors="true"/>-    
+    <field name="synonyms" type="text_subphrase_match" indexed="true" stored="true" required="false" multiValued="true" termVectors="true"/>
+    <field name="defining_terms" type="text_subphrase_match" indexed="true" stored="true" required="false" multiValued="true" termVectors="true"/>-    
 
     <!-- These fields track the status of the activity entry, they do not specify event data -->
     <field name="catchall" type="text_general" indexed="true" stored="false" multiValued="true"/> <!-- Do not set this, copy fields set this -->
