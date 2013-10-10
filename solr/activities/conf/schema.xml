@@ -181,7 +181,8 @@
     
     <!-- This is used to provide a key for grouping on -->
     <field name="activity_name_and_provider_id" type="string" indexed="true" stored="false" multiValued="false"/>
-    
+    <field name="activity_series_id" type="string" indexed="true" stored="true" required="true"/>
+
     <!-- Required to store the sub-coordinates of the *_coordinates fields -->
     <dynamicField name="*_lat_lon"  type="double" indexed="true"  stored="false" />
     
