@@ -331,7 +331,7 @@
     <filterCache class="solr.FastLRUCache"
                  size="512"
                  initialSize="512"
-                 autowarmCount="0"/>
+                 autowarmCount="128"/>
 
     <!-- Query Result Cache
          
@@ -341,7 +341,7 @@
     <queryResultCache class="solr.LRUCache"
                      size="512"
                      initialSize="512"
-                     autowarmCount="0"/>
+                     autowarmCount="128"/>
    
     <!-- Document Cache
 
