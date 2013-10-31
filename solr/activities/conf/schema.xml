@@ -141,7 +141,6 @@
     <field name="top_level_category_ids" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
     <field name="top_level_category_names" type="text_general" indexed="true" stored="true" required="false" multiValued="true"/>
     <field name="cost" type="currency" indexed="true" stored="true" required="false"/>
-    <field name="num_activity_categories" type="int" indexed="true" stored="false" required="false"/>
     
     <!-- TODO: remove this post solr 4.4 upgrade -->
     <field name="cost_facetable" type="float" indexed="true" stored="false" required="false"/>    
