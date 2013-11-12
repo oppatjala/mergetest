@@ -2,9 +2,9 @@
   <document>
     <entity name="activity" pk="id" dataSource="rw_db" onError="skip"
         query="select * from activity where status=1" 
-        deltaQuery="select * from activity where last_modified_date > '${dataimporter.last_index_time}'"
+        deltaQuery="select * from activity where last_modified_date > DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)"
         deltaImportQuery="select * from activity where id='${dataimporter.delta.id}'"
-        deletedPkQuery="select id from activity where status!=1">
+        deletedPkQuery="select ACT.id from activity as ACT JOIN provider as PRO on ACT.provider_id=PRO.id where ACT.status!=1 OR PRO.status!=1;">
 
       <field column="id" name="id"/>
       <field column="name" name="name"/>
@@ -20,7 +20,8 @@
       <field column="end_date" name="end_date"/>
       <field column="created_date" name="created_date"/>
       <field column="last_modified_date" name="last_modified_date"/>
-
+      <field column="activity_series_id" name="activity_series_id"/>
+    
       <entity name="activity_categories" dataSource="rw_db" query="select count(*) AS num_activity_categories from activity_categories where activity_id='${activity.id}'">
         <entity name="leaf_categories" dataSource="rw_db" query="select distinct(CAT.parent_id) AS top_level_category_ids, PARENT_CAT.name AS top_level_category_names, CAT.id AS leaf_category_ids, CAT.name AS leaf_category_names from category as CAT JOIN activity_categories as AC ON CAT.id=AC.category_id JOIN activity as ACT ON AC.activity_id=ACT.id JOIN category as PARENT_CAT on CAT.parent_id=PARENT_CAT.id where ${activity_categories.num_activity_categories} > 0 and ACT.id='${activity.id}' and CAT.depth=2 and PARENT_CAT.id=CAT.parent_id">		
           <field column="leaf_category_ids" name="leaf_category_ids"/>
@@ -42,13 +43,12 @@
         <field column="event_finish" name="first_event_finish"/>
       </entity>
 
-      <entity name="provider" dataSource="rw_db" transformer="TemplateTransformer" query="select PRO.id AS provider_id, PRO.name AS provider_name, PRO.service_address_id as address_id from provider as PRO JOIN activity as ACT ON ACT.provider_id=PRO.id where ACT.id='${activity.id}'">
+      <entity name="provider" dataSource="rw_db" transformer="TemplateTransformer" query="select PRO.id AS provider_id, PRO.name AS provider_name, PRO.service_address_id as address_id from provider as PRO JOIN activity as ACT ON ACT.provider_id=PRO.id where ACT.id='${activity.id}' and PRO.status=1">
         <field column="provider_id" name="provider_id"/>
         <field column="provider_name" name="provider_name"/>
         
         <field column="activity_name_and_provider_id" template="${provider.provider_id}_${activity.name}"/>
-        <field column="activity_series_id" name="activity_series_id"/>
-		
+        
         <entity name="provider_coords" dataSource="rw_db" query="select CONCAT(ADDR.latitude,',',ADDR.longitude) as provider_coordinates, ADDR.city as provider_city, ADDR.address_state as provider_state, ADDR.zip_code as provider_zip_code from service_address as ADDR where ADDR.id=if('${activity.service_address_id}','${activity.service_address_id}','${provider.address_id}') and ADDR.latitude IS NOT NULL and ADDR.longitude IS NOT NULL">
           <field column="provider_coordinates" name="provider_coordinates"/>
           <field column="provider_city" name="provider_city"/>
