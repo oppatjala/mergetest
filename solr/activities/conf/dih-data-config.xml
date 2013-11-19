@@ -4,7 +4,7 @@
         query="select * from activity where status=1" 
         deltaQuery="select * from activity where last_modified_date > DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)"
         deltaImportQuery="select * from activity where id='${dataimporter.delta.id}'"
-        deletedPkQuery="select ACT.id from activity as ACT JOIN provider as PRO on ACT.provider_id=PRO.id where (ACT.status!=1 OR PRO.status!=1) and (ACT.last_modified_date &gt; '${dataimporter.last_index_time}' or PRO.last_modified_date &gt; '${dataimporter.last_index_time}')">
+        deletedPkQuery="select ACT.id from activity as ACT JOIN provider as PRO on ACT.provider_id=PRO.id where (ACT.status!=1 OR PRO.status!=1) and (ACT.last_modified_date > DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE) or PRO.last_modified_date > DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE))">
 
       <field column="id" name="id"/>
       <field column="name" name="name"/>
