@@ -22,7 +22,7 @@
       <field column="email" name="email"/>
       <field column="online_reservation_supported" name="online_reservation_supported"/>
 
-      <entity name="provider_loc" dataSource="rw_db" query="select ADDR.city as city, ADDR.address_state as state, ADDR.zip_code as zip_code, CONCAT(ADDR.latitude,',',ADDR.longitude) as coordinates from service_address as ADDR where ADDR.id='${provider.service_address_id}' and ADDR.latitude IS NOT NULL and ADDR.longitude IS NOT NULL"">
+      <entity name="provider_loc" dataSource="rw_db" query="select ADDR.city as city, ADDR.address_state as state, ADDR.zip_code as zip_code, CONCAT(ADDR.latitude,',',ADDR.longitude) as coordinates from service_address as ADDR where ADDR.id='${provider.service_address_id}' and ADDR.latitude IS NOT NULL and ADDR.longitude IS NOT NULL">
         <field column="city" name="city"/>
         <field column="state" name="state"/>
         <field column="zip_code" name="zip_code"/>
