@@ -140,7 +140,7 @@
     <field name="leaf_category_names" type="text_general" indexed="true" stored="true" required="false" multiValued="true"/>
     <field name="top_level_category_ids" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
     <field name="top_level_category_names" type="text_general" indexed="true" stored="true" required="false" multiValued="true"/>
-    <field name="activity_options_value" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
+    <field name="activity_option_values" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
     
     <field name="cost" type="currency" indexed="true" stored="true" required="false"/>
     <field name="min_cost" type="currency" indexed="true" stored="true" required="false"/>
@@ -216,7 +216,7 @@
   <copyField source="provider_zip_code" dest="catchall"/>
   <copyField source="top_level_category_names" dest="catchall"/>
   <copyField source="leaf_category_names" dest="catchall"/>
-  <copyField source="activity_options_value" dest="catchall"/>
+  <copyField source="activity_option_values" dest="catchall"/>
 
   <!-- TODO: Remove this post solr 4.4 upgrade -->
   <copyField source="cost" dest="cost_facetable"/>
