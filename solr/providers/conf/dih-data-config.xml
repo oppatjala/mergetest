@@ -12,7 +12,7 @@
       <field column="name" name="name"/>
       <field column="description" name="description"/>
 
-      <entity name="activity_option_values" dataSource="rw_db" query="SELECT distinct(OP.name) AS option_name FROM provider_option PO, reservation.option OP WHERE PO.provider_id = '${provider.id}' AND PO.option_id = OP.id">
+      <entity name="activity_option_values" dataSource="rw_db" query="SELECT OP.name AS option_name FROM provider_option PO, reservation.option OP WHERE PO.provider_id = '${provider.id}' AND PO.option_id = OP.id">
         <field column="option_name" name="activity_option_values"/>
       </entity>
 
