@@ -631,10 +631,10 @@
        <str name="fl">*,score</str>
 
        <str name="qf">
-          name^5 catchall_name_category^3 catchall^1
+          name^5 catchall_name_category^3 activity_option_values^2 catchall^1
        </str>
        <str name="pf">
-          name^5 catchall_name_category^3 catchall^1
+          name^5 catchall_name_category^3 activity_option_values^2 catchall^1
        </str>
 
        <str name="mm">3&lt;-1 5&lt;-2 6&lt;90%</str>
