@@ -10,7 +10,8 @@
     <fieldType name="double" class="solr.TrieDoubleField" precisionStep="0" omitNorms="true" sortMissingLast="true" positionIncrementGap="0"/>    
     <fieldType name="date" class="solr.TrieDateField" omitNorms="true" sortMissingLast="true" precisionStep="0" positionIncrementGap="0"/>
     <fieldType name="lat_lon" class="solr.LatLonType" sortMissingLast="true" subFieldSuffix="_lat_lon"/>
-    
+    <fieldType name="currency" class="solr.CurrencyField" precisionStep="8" defaultCurrency="USD" currencyConfig="currency.xml" />
+
     <!-- A general text field that has reasonable defaults: 
      it tokenizes with StandardTokenizer,
      removes stop words from case-insensitive "stopwords_en.txt"
@@ -114,6 +115,14 @@
     <field name="leaf_category_names" type="text_general" indexed="true" stored="true" required="false" multiValued="true"/>
     <field name="top_level_category_ids" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
     <field name="top_level_category_names" type="text_general" indexed="true" stored="true" required="false" multiValued="true"/>
+    <field name="activity_option_values" type="text_general" indexed="true" stored="true" required="false" multiValued="true"/>
+     
+    <field name="min_cost" type="currency" indexed="true" stored="true" required="false"/>
+    <field name="max_cost" type="currency" indexed="true" stored="true" required="false"/>
+     
+     TODO: remove this post solr 4.4 upgrade
+    <field name="min_cost_facetable" type="float" indexed="true" stored="false" required="false"/>    
+    <field name="max_cost_facetable" type="float" indexed="true" stored="false" required="false"/>
 
     <field name="email" type="string" indexed="true" stored="true" required="false"/>
     <field name="online_reservation_supported" type="boolean" indexed="true" stored="true" required="false"/>
@@ -159,8 +168,13 @@
   <copyField source="leaf_category_names" dest="catchall"/>
   <copyField source="city" dest="catchall"/>
   <copyField source="zip_code" dest="catchall"/>
+  <copyField source="activity_option_values" dest="catchall"/>
 
   <copyField source="name" dest="name_alpha_sort"/>
   <copyField source="name" dest="name_auto_start_ngrams"/>
   <copyField source="name" dest="name_auto_all_ngrams"/>
+
+  <!-- TODO: Remove this post solr 4.4 upgrade -->
+  <copyField source="min_cost" dest="min_cost_facetable"/>
+  <copyField source="max_cost" dest="max_cost_facetable"/>
 </schema>
