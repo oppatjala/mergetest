@@ -26,9 +26,9 @@
         <field column="activity_option_name" name="activity_option_values"/>
       </entity>
 
-      <entity name="activity_options_cost" dataSource="rw_db" query="SELECT IF(AO.cost_override, min(AO.cost_override), AC.cost) AS activity_min_cost, IF(AO.cost_override, max(AO.cost_override), AC.cost)  AS activity_max_cost FROM reservation.activity_option AO,      reservation.option OP, reservation.activity AC WHERE AO.activity_id = AC.id AND AO.option_id = OP.id AND AO.activity_id = '${activity.id}'" >
-        <field column="activity_min_cost" name="min_cost"/>
-        <field column="activity_max_cost" name="max_cost"/>
+      <entity name="activity_options_cost" dataSource="rw_db" query="SELECT  IF(AO.cost_override, min(AO.cost_override), AC.cost) AS min_cost, IF(AO.cost_override, max(AO.cost_override), AC.cost)  AS max_cost FROM activity_option AO, activity AC WHERE AO.activity_id = AC.id AND AO.activity_id  = '${activity.id}'" >
+        <field column="min_cost" name="min_cost"/>
+        <field column="max_cost" name="max_cost"/>
       </entity>
 
       <entity name="activity_categories" dataSource="rw_db" query="select count(*) AS num_activity_categories from activity_categories where activity_id='${activity.id}'">
