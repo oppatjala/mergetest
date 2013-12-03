@@ -12,11 +12,11 @@
       <field column="name" name="name"/>
       <field column="description" name="description"/>
 
-      <entity name="activity_option_values" dataSource="rw_db" query="SELECT OP.name AS option_name FROM provider_option PO, reservation.option OP WHERE PO.provider_id = '${provider.id}' AND PO.option_id = OP.id">
+      <entity name="activity_option_values" dataSource="rw_db" query="SELECT DISTINCT(GO.name) as option_name FROM provider PR JOIN activity AC ON PR.id = AC.provider_id JOIN activity_option AO ON AC.id = AO.activity_id JOIN global_option GO ON GO.id = AO.option_id WHERE PR.id  = '${provider.id}'"> 
         <field column="option_name" name="activity_option_values"/>
       </entity>
 
-      <entity name="option_costs" dataSource="rw_db" query="SELECT IF(AO.cost_override, min(AO.cost_override), AC.cost) AS min_cost, IF(AO.cost_override, max(AO.cost_override), AC.cost) AS max_cost FROM provider PR JOIN activity AC ON PR.id = AC.provider_id JOIN activity_option AO ON AC.id = AO.activity_id WHERE PR.id = '${provider.id}'" >
+      <entity name="option_costs" dataSource="rw_db" query="SELECT min(AO.cost_override)AS min_cost, max(AO.cost_override) AS max_cost FROM provider PR JOIN activity AC ON PR.id = AC.provider_id JOIN activity_option AO ON AC.id = AO.activity_id WHERE PR.id = '${provider.id}'" >
         <field column="min_cost" name="min_cost"/>
         <field column="max_cost" name="max_cost"/>
       </entity>
