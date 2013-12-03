@@ -12,7 +12,7 @@
       <field column="name" name="name"/>
       <field column="description" name="description"/>
 
-      <entity name="activity_option_values" dataSource="rw_db" query="SELECT DISTINCT(GO.name) FROM provider PR JOIN activity AC ON R.id = AC.provider_id JOIN activity_option AO ON AC.id = AO.activity_id JOIN global_option GO ON GO.id = AO.option_id WHERE PR.id = '${provider.id}'">
+      <entity name="activity_option_values" dataSource="rw_db" query="SELECT DISTINCT(GO.name) as option_name FROM provider PR JOIN activity AC ON PR.id = AC.provider_id JOIN activity_option AO ON AC.id = AO.activity_id JOIN global_option GO ON GO.id = AO.option_id WHERE PR.id  = '${provider.id}'"> 
         <field column="option_name" name="activity_option_values"/>
       </entity>
 
