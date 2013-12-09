@@ -171,6 +171,8 @@
     <field name="first_event_instructor" type="string" indexed="true" stored="true" required="false"/>
     <field name="first_event_start" type="date" indexed="true" stored="true" required="false"/>
     <field name="first_event_finish" type="date" indexed="true" stored="true" required="false"/>
+    <field name="last_event_start" type="date" indexed="true" stored="true" required="false"/>
+    <field name="last_event_finish" type="date" indexed="true" stored="true" required="false"/>
 
     <!-- These fields track the status of the activity entry, they do not specify event data -->
     <field name="status" type="int" indexed="true" stored="true" required="true"/>

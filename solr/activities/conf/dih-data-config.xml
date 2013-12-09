@@ -52,6 +52,11 @@
         <field column="event_finish" name="first_event_finish"/>
       </entity>
 
+      <entity name="last_event" dataSource="rw_db" query="select event_start AS event_last_event_start, event_finish AS event_last_event_finish from reservation.activity_event where event_finish in (select max(AE.event_finish) from reservation.activity_event AE join reservation.activity A on (AE.activity_id=A.id) where A.id='${activity.id}' and AE.status=1) limit 1">
+        <field column="event_last_event_start" name="last_event_start"/>
+        <field column="event_last_event_finish" name="last_event_finish"/>
+      </entity>
+
       <entity name="provider" dataSource="rw_db" transformer="TemplateTransformer" query="select PRO.id AS provider_id, PRO.name AS provider_name, PRO.service_address_id as address_id from provider as PRO JOIN activity as ACT ON ACT.provider_id=PRO.id where ACT.id='${activity.id}' and PRO.status=1">
         <field column="provider_id" name="provider_id"/>
         <field column="provider_name" name="provider_name"/>
