@@ -1,8 +1,8 @@
 <dataConfig>
   <document>
     <entity name="provider" pk="id" dataSource="rw_db" onError="skip"
-        query="select * from provider where status=1" 
-        deltaQuery="select * from provider where last_modified_date > '${dataimporter.last_index_time}'"
+        query="select * from provider where status=1 and activity_count>0" 
+        deltaQuery="select * from provider where last_modified_date > '${dataimporter.last_index_time}' and activity_count>0"
         deltaImportQuery="select * from provider where id='${dataimporter.delta.id}'"
         deletedPkQuery="select id from provider where status!=1">
 
