@@ -84,7 +84,7 @@
          before flushing.
          If both ramBufferSizeMB and maxBufferedDocs is set, then
          Lucene will flush based on whichever limit is hit first.  -->
-    <!-- <ramBufferSizeMB>32</ramBufferSizeMB> -->
+    <ramBufferSizeMB>128</ramBufferSizeMB>
     <!-- <maxBufferedDocs>1000</maxBufferedDocs> -->
 
     <!-- Expert: Merge Policy 
@@ -631,10 +631,10 @@
        <str name="fl">*,score</str>
 
        <str name="qf">
-          catchall_location_category_provider^10 name^5 catchall^3
+          catchall_location_category_provider^10 name^5 activity_option_values^4 catchall^3
        </str>
        <str name="pf">
-          catchall_location_category_provider^10 name^5 catchall^3
+          catchall_location_category_provider^10 name^5 activity_option_values^4 catchall^3
        </str>
 
        <str name="mm">3&lt;-1 5&lt;-2 6&lt;90%</str>
@@ -740,6 +740,7 @@
          <str name="user">${solr.global.dataimport.db.user:}</str>
          <str name="password">${solr.global.dataimport.db.password:}</str>
          <str name="encoding">UTF-8</str>
+         <str name="batchSize">-1</str>
       </lst>
       <str name="config">dih-data-config.xml</str>
     </lst>

@@ -140,10 +140,17 @@
     <field name="leaf_category_names" type="text_general" indexed="true" stored="true" required="false" multiValued="true"/>
     <field name="top_level_category_ids" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
     <field name="top_level_category_names" type="text_general" indexed="true" stored="true" required="false" multiValued="true"/>
+    <field name="activity_option_values" type="text_general" indexed="true" stored="true" required="false" multiValued="true"/>
+    
     <field name="cost" type="currency" indexed="true" stored="true" required="false"/>
+    <field name="min_cost" type="currency" indexed="true" stored="true" required="false"/>
+    <field name="max_cost" type="currency" indexed="true" stored="true" required="false"/>
     
     <!-- TODO: remove this post solr 4.4 upgrade -->
-    <field name="cost_facetable" type="float" indexed="true" stored="false" required="false"/>    
+    <field name="cost_facetable" type="float" indexed="true" stored="false" required="false"/>
+    <field name="min_cost_facetable" type="float" indexed="true" stored="false" required="false"/>    
+    <field name="max_cost_facetable" type="float" indexed="true" stored="false" required="false"/>    
+
     <field name="max_capacity" type="int" indexed="true" stored="true" required="false"/>
     <field name="num_open" type="int" indexed="true" stored="true" required="false"/>
     <field name="max_age" type="int" indexed="true" stored="true" required="false"/>
@@ -164,6 +171,8 @@
     <field name="first_event_instructor" type="string" indexed="true" stored="true" required="false"/>
     <field name="first_event_start" type="date" indexed="true" stored="true" required="false"/>
     <field name="first_event_finish" type="date" indexed="true" stored="true" required="false"/>
+    <field name="last_event_start" type="date" indexed="true" stored="true" required="false"/>
+    <field name="last_event_finish" type="date" indexed="true" stored="true" required="false"/>
 
     <!-- These fields track the status of the activity entry, they do not specify event data -->
     <field name="status" type="int" indexed="true" stored="true" required="true"/>
@@ -181,7 +190,8 @@
     
     <!-- This is used to provide a key for grouping on -->
     <field name="activity_name_and_provider_id" type="string" indexed="true" stored="false" multiValued="false"/>
-    
+    <field name="activity_series_id" type="string" indexed="true" stored="true" required="true"/>
+
     <!-- Required to store the sub-coordinates of the *_coordinates fields -->
     <dynamicField name="*_lat_lon"  type="double" indexed="true"  stored="false" />
     
@@ -208,9 +218,12 @@
   <copyField source="provider_zip_code" dest="catchall"/>
   <copyField source="top_level_category_names" dest="catchall"/>
   <copyField source="leaf_category_names" dest="catchall"/>
+  <copyField source="activity_option_values" dest="catchall"/>
 
   <!-- TODO: Remove this post solr 4.4 upgrade -->
   <copyField source="cost" dest="cost_facetable"/>
+  <copyField source="min_cost" dest="min_cost_facetable"/>
+  <copyField source="max_cost" dest="max_cost_facetable"/>
 
   <copyField source="provider_name" dest="catchall_location_category_provider"/>
   <copyField source="provider_city" dest="catchall_location_category_provider"/>

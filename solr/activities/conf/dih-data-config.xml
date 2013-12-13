@@ -2,9 +2,9 @@
   <document>
     <entity name="activity" pk="id" dataSource="rw_db" onError="skip"
         query="select * from activity where status=1" 
-        deltaQuery="select * from activity where last_modified_date > '${dataimporter.last_index_time}'"
+        deltaQuery="select * from activity where last_modified_date > DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)"
         deltaImportQuery="select * from activity where id='${dataimporter.delta.id}'"
-        deletedPkQuery="select id from activity where status!=1">
+        deletedPkQuery="select ACT.id from activity as ACT JOIN provider as PRO on ACT.provider_id=PRO.id where (ACT.status!=1 OR PRO.status!=1) and (ACT.last_modified_date > DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE) or PRO.last_modified_date > DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE))">
 
       <field column="id" name="id"/>
       <field column="name" name="name"/>
@@ -20,26 +20,49 @@
       <field column="end_date" name="end_date"/>
       <field column="created_date" name="created_date"/>
       <field column="last_modified_date" name="last_modified_date"/>
-
-      <entity name="leaf_categories" dataSource="rw_db" query="select distinct(CAT.parent_id) AS top_level_category_ids, PARENT_CAT.name AS top_level_category_names, CAT.id AS leaf_category_ids, CAT.name AS leaf_category_names from category as CAT JOIN activity_categories as AC ON CAT.id=AC.category_id JOIN activity as ACT ON AC.activity_id=ACT.id JOIN category as PARENT_CAT on CAT.parent_id=PARENT_CAT.id where ACT.id='${activity.id}' and CAT.depth=2 and PARENT_CAT.id=CAT.parent_id">
-        <field column="leaf_category_ids" name="leaf_category_ids"/>
-        <field column="leaf_category_names" name="leaf_category_names"/>        
-        <field column="top_level_category_ids" name="top_level_category_ids"/>
-        <field column="top_level_category_names" name="top_level_category_names"/>
+      <field column="activity_series_id" name="activity_series_id"/>
+      
+      <entity name="activity_option_values" dataSource="rw_db" query="SELECT GO.name AS activity_option_name FROM reservation.activity_option AO, global_option GO WHERE AO.activity_id = '${activity.id}' AND AO.option_id = GO.id" >
+        <field column="activity_option_name" name="activity_option_values"/>
       </entity>
 
+      <entity name="activity_options_cost" dataSource="rw_db" query="SELECT  IF(AO.cost_override, min(AO.cost_override), AC.cost) AS min_cost, IF(AO.cost_override, max(AO.cost_override), AC.cost)  AS max_cost FROM activity_option AO, activity AC WHERE AO.activity_id = AC.id AND AO.activity_id  = '${activity.id}'" >
+        <field column="min_cost" name="min_cost"/>
+        <field column="max_cost" name="max_cost"/>
+      </entity>
+
+      <entity name="activity_categories" dataSource="rw_db" query="select count(*) AS num_activity_categories from activity_categories where activity_id='${activity.id}'">
+        <entity name="leaf_categories" dataSource="rw_db" query="select distinct(CAT.parent_id) AS top_level_category_ids, PARENT_CAT.name AS top_level_category_names, CAT.id AS leaf_category_ids, CAT.name AS leaf_category_names from category as CAT JOIN activity_categories as AC ON CAT.id=AC.category_id JOIN activity as ACT ON AC.activity_id=ACT.id JOIN category as PARENT_CAT on CAT.parent_id=PARENT_CAT.id where ${activity_categories.num_activity_categories} > 0 and ACT.id='${activity.id}' and CAT.depth=2 and PARENT_CAT.id=CAT.parent_id">		
+          <field column="leaf_category_ids" name="leaf_category_ids"/>
+          <field column="leaf_category_names" name="leaf_category_names"/>        
+          <field column="top_level_category_ids" name="top_level_category_ids"/>
+          <field column="top_level_category_names" name="top_level_category_names"/>
+        </entity>
+        <entity name="prov_leaf_categories" dataSource="rw_db" query="select distinct(CAT.parent_id) AS top_level_category_ids, PARENT_CAT.name AS top_level_category_names, CAT.id AS leaf_category_ids, CAT.name AS leaf_category_names from category as CAT JOIN provider_categories as PC ON CAT.id=PC.category_id JOIN provider as PRO ON PC.provider_id=PRO.id JOIN category as PARENT_CAT on CAT.parent_id=PARENT_CAT.id where ${activity_categories.num_activity_categories} = 0 and PRO.id='${activity.provider_id}' and CAT.depth=2 and PARENT_CAT.id=CAT.parent_id">
+          <field column="leaf_category_ids" name="leaf_category_ids"/>
+          <field column="leaf_category_names" name="leaf_category_names"/>        
+          <field column="top_level_category_ids" name="top_level_category_ids"/>
+          <field column="top_level_category_names" name="top_level_category_names"/>
+        </entity>	
+      </entity>
+	  
       <entity name="events" dataSource="rw_db" query="select AE.instructor AS event_instructor, AE.event_start AS event_start, AE.event_finish AS event_finish from activity_event as AE where AE.activity_id='${activity.id}' and AE.status=1 order by AE.event_start asc limit 1">
         <field column="event_instructor" name="first_event_instructor"/>
         <field column="event_start" name="first_event_start"/>
         <field column="event_finish" name="first_event_finish"/>
       </entity>
 
-      <entity name="provider" dataSource="rw_db" transformer="TemplateTransformer" query="select PRO.id AS provider_id, PRO.name AS provider_name, PRO.service_address_id as address_id from provider as PRO JOIN activity as ACT ON ACT.provider_id=PRO.id where ACT.id='${activity.id}'">
+      <entity name="last_event" dataSource="rw_db" query="select AE.event_start AS event_last_event_start, AE.event_finish AS event_last_event_finish from activity_event as AE where AE.activity_id = '${activity.id}' and AE.status = 1 order by AE.event_finish desc limit 1">
+        <field column="event_last_event_start" name="last_event_start"/>
+        <field column="event_last_event_finish" name="last_event_finish"/>
+      </entity>
+
+      <entity name="provider" dataSource="rw_db" transformer="TemplateTransformer" query="select PRO.id AS provider_id, PRO.name AS provider_name, PRO.service_address_id as address_id from provider as PRO JOIN activity as ACT ON ACT.provider_id=PRO.id where ACT.id='${activity.id}' and PRO.status=1">
         <field column="provider_id" name="provider_id"/>
         <field column="provider_name" name="provider_name"/>
         
         <field column="activity_name_and_provider_id" template="${provider.provider_id}_${activity.name}"/>
-
+        
         <entity name="provider_coords" dataSource="rw_db" query="select CONCAT(ADDR.latitude,',',ADDR.longitude) as provider_coordinates, ADDR.city as provider_city, ADDR.address_state as provider_state, ADDR.zip_code as provider_zip_code from service_address as ADDR where ADDR.id=if('${activity.service_address_id}','${activity.service_address_id}','${provider.address_id}') and ADDR.latitude IS NOT NULL and ADDR.longitude IS NOT NULL">
           <field column="provider_coordinates" name="provider_coordinates"/>
           <field column="provider_city" name="provider_city"/>
@@ -52,7 +75,6 @@
           <field column="online_reservation_supported" name="online_reservation_supported"/>
         </entity>        
       </entity>
-      
     </entity>
   </document>
 </dataConfig>
