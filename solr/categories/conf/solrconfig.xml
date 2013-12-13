@@ -686,6 +686,7 @@
          <str name="user">${solr.global.dataimport.db.user:}</str>
          <str name="password">${solr.global.dataimport.db.password:}</str>
          <str name="encoding">UTF-8</str>
+         <str name="batchSize">-1</str>
       </lst>
       <str name="config">dih-data-config.xml</str>
     </lst>
