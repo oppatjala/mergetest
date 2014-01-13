@@ -1,10 +1,10 @@
 <dataConfig>
   <document>
     <entity name="provider" pk="id" dataSource="rw_db" onError="skip"
-        query="select * from provider where status=1 and activity_count>0" 
-        deltaQuery="select * from provider where last_modified_date > '${dataimporter.last_index_time}' and activity_count>0"
-        deltaImportQuery="select * from provider where id='${dataimporter.delta.id}'"
-        deletedPkQuery="select id from provider where status!=1">
+        query="SELECT * FROM provider WHERE status=1 AND activity_count &gt; 0" 
+        deltaQuery="SELECT * FROM provider WHERE last_modified_date &gt; '${dataimporter.last_index_time}' AND activity_count &gt; 0"
+        deltaImportQuery="SELECT * FROM provider WHERE id='${dataimporter.delta.id}'"
+        deletedPkQuery="SELECT id FROM provider WHERE status != 1 AND activity_count &lt; 1">
 
       <field column="id" name="id"/>
       <field column="vendor_id" name="vendor_id"/>
@@ -12,16 +12,16 @@
       <field column="name" name="name"/>
       <field column="description" name="description"/>
 
-      <entity name="activity_option_values" dataSource="rw_db" query="SELECT DISTINCT(GO.name) as option_name FROM provider PR JOIN activity AC ON PR.id = AC.provider_id JOIN activity_option AO ON AC.id = AO.activity_id JOIN global_option GO ON GO.id = AO.option_id WHERE PR.id  = '${provider.id}'"> 
+      <entity name="activity_option_values" dataSource="rw_db" query="SELECT DISTINCT(GO.name) AS option_name FROM provider PR JOIN activity AC ON PR.id = AC.provider_id JOIN activity_option AO ON AC.id = AO.activity_id JOIN global_option GO ON GO.id = AO.option_id WHERE PR.id  = '${provider.id}'"> 
         <field column="option_name" name="activity_option_values"/>
       </entity>
 
-      <entity name="option_costs" dataSource="rw_db" query="SELECT min(AO.cost_override)AS min_cost, max(AO.cost_override) AS max_cost FROM provider PR JOIN activity AC ON PR.id = AC.provider_id JOIN activity_option AO ON AC.id = AO.activity_id WHERE PR.id = '${provider.id}'" >
+      <entity name="option_costs" dataSource="rw_db" query="SELECT min(AO.cost_override) AS min_cost, max(AO.cost_override) AS max_cost FROM provider PR JOIN activity AC ON PR.id = AC.provider_id JOIN activity_option AO ON AC.id = AO.activity_id WHERE PR.id = '${provider.id}'" >
         <field column="min_cost" name="min_cost"/>
         <field column="max_cost" name="max_cost"/>
       </entity>
 
-      <entity name="leaf_categories" dataSource="rw_db" query="select distinct(CAT.parent_id) AS top_level_category_ids, PARENT_CAT.name AS top_level_category_names, CAT.id AS leaf_category_ids, CAT.name AS leaf_category_names from category as CAT JOIN provider_categories as PC ON CAT.id=PC.category_id JOIN provider as PRO ON PC.provider_id=PRO.id JOIN category as PARENT_CAT on CAT.parent_id=PARENT_CAT.id where PRO.id='${provider.id}' and CAT.depth=2 and PARENT_CAT.id=CAT.parent_id">
+      <entity name="leaf_categories" dataSource="rw_db" query="SELECT distinct(CAT.parent_id) AS top_level_category_ids, PARENT_CAT.name AS top_level_category_names, CAT.id AS leaf_category_ids, CAT.name AS leaf_category_names FROM category AS CAT JOIN provider_categories AS PC ON CAT.id=PC.category_id JOIN provider AS PRO ON PC.provider_id=PRO.id JOIN category AS PARENT_CAT ON CAT.parent_id=PARENT_CAT.id WHERE PRO.id='${provider.id}' AND CAT.depth=2 AND PARENT_CAT.id=CAT.parent_id">
         <field column="leaf_category_ids" name="leaf_category_ids"/>
         <field column="leaf_category_names" name="leaf_category_names"/>        
         <field column="top_level_category_ids" name="top_level_category_ids"/>
@@ -31,7 +31,7 @@
       <field column="email" name="email"/>
       <field column="online_reservation_supported" name="online_reservation_supported"/>
 
-      <entity name="provider_loc" dataSource="rw_db" query="select ADDR.city as city, ADDR.address_state as state, ADDR.zip_code as zip_code, CONCAT(ADDR.latitude,',',ADDR.longitude) as coordinates from service_address as ADDR where ADDR.id='${provider.service_address_id}' and ADDR.latitude IS NOT NULL and ADDR.longitude IS NOT NULL">
+      <entity name="provider_loc" dataSource="rw_db" query="SELECT ADDR.city AS city, ADDR.address_state AS state, ADDR.zip_code AS zip_code, CONCAT(ADDR.latitude,',',ADDR.longitude) AS coordinates FROM service_address AS ADDR WHERE ADDR.id='${provider.service_address_id}' AND ADDR.latitude IS NOT NULL AND ADDR.longitude IS NOT NULL">
         <field column="city" name="city"/>
         <field column="state" name="state"/>
         <field column="zip_code" name="zip_code"/>
