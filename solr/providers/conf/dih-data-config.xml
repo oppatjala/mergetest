@@ -2,9 +2,9 @@
   <document>
     <entity name="provider" pk="id" dataSource="rw_db" onError="skip"
         query="SELECT * FROM provider WHERE status=1 AND activity_count &gt; 0" 
-        deltaQuery="SELECT * FROM provider WHERE last_modified_date &gt; '${dataimporter.last_index_time}' AND activity_count &gt; 0"
+        deltaQuery="SELECT * FROM provider WHERE last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)"
         deltaImportQuery="SELECT * FROM provider WHERE id='${dataimporter.delta.id}'"
-        deletedPkQuery="SELECT id FROM provider WHERE status != 1 AND activity_count &lt; 1">
+        deletedPkQuery="SELECT id FROM provider WHERE (status != 1 OR activity_count &lt; 1) AND last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)">
 
       <field column="id" name="id"/>
       <field column="vendor_id" name="vendor_id"/>
