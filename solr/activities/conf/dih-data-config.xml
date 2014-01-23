@@ -2,7 +2,8 @@
   <document>
     <entity name="activity" pk="id" dataSource="rw_db" onError="skip"
         query="SELECT ACT.* FROM activity AS ACT JOIN provider AS PRO ON ACT.provider_id=PRO.id WHERE (ACT.status=1 AND PRO.status=1)" 
-        deltaQuery="SELECT * FROM activity WHERE last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)"
+        deltaQuery="SELECT ACT.* FROM activity ACT, provider PRO WHERE ACT.provider_id = PRO.id AND ( ACT.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE) 
+OR PRO.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE))"
         deltaImportQuery="SELECT * FROM activity WHERE id='${dataimporter.delta.id}'"
         deletedPkQuery="SELECT ACT.id FROM activity AS ACT JOIN provider AS PRO ON ACT.provider_id=PRO.id WHERE (ACT.status!=1 OR PRO.status!=1) AND (ACT.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE) OR PRO.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE))">
 
