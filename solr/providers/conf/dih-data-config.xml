@@ -2,7 +2,7 @@
   <document>
     <entity name="provider" pk="id" dataSource="rw_db" onError="skip"
         query="SELECT * FROM provider WHERE status=1 AND activity_count &gt; 0" 
-        deltaQuery="SELECT * FROM provider WHERE last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)"
+        deltaQuery="SELECT PRO.* FROM provider PRO, vendor VE WHERE PRO.vendor_id=VE.id AND (PRO.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE) OR VE.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE))"
         deltaImportQuery="SELECT * FROM provider WHERE id='${dataimporter.delta.id}'"
         deletedPkQuery="SELECT id FROM provider WHERE (status != 1 OR activity_count &lt; 1) AND last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)">
 
@@ -28,8 +28,9 @@
         <field column="top_level_category_names" name="top_level_category_names"/>
       </entity>
 
-      <field column="email" name="email"/>
-      <field column="online_reservation_supported" name="online_reservation_supported"/>
+      <entity name="vendor" dataSource="rw_db" query="SELECT IF(PRO.online_reservation_supported IS NOT NULL, PRO.online_reservation_supported, VE.online_reservation_supported) AS online_reservation_supported FROM provider AS PRO JOIN vendor AS VE ON PRO.vendor_id=VE.id WHERE PRO.id='${provider.id}'">
+        <field column="online_reservation_supported" name="online_reservation_supported"/>
+      </entity>
 
       <entity name="provider_loc" dataSource="rw_db" query="SELECT ADDR.city AS city, ADDR.address_state AS state, ADDR.zip_code AS zip_code, CONCAT(ADDR.latitude,',',ADDR.longitude) AS coordinates FROM service_address AS ADDR WHERE ADDR.id='${provider.service_address_id}' AND ADDR.latitude IS NOT NULL AND ADDR.longitude IS NOT NULL">
         <field column="city" name="city"/>
@@ -38,6 +39,7 @@
         <field column="coordinates" name="coordinates"/>
       </entity>
       
+      <field column="email" name="email"/>
       <field column="status" name="status"/>
       <field column="created_date" name="created_date"/>
       <field column="last_modified_date" name="last_modified_date"/>
