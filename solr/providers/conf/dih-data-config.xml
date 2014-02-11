@@ -28,8 +28,8 @@
         <field column="top_level_category_names" name="top_level_category_names"/>
       </entity>
 
-      <entity name="vendor" dataSource="rw_db" query="SELECT IF(PRO.online_reservation_supported IS NOT NULL, PRO.online_reservation_supported, VE.online_reservation_supported) AS online_reservation_supported FROM provider AS PRO JOIN vendor AS VE ON PRO.vendor_id=VE.id WHERE PRO.id='${provider.id}'">
-        <field column="online_reservation_supported" name="online_reservation_supported"/>
+      <entity name="vendor" dataSource="rw_db" query="SELECT IF(PRO.booking_method IS NOT NULL, PRO.booking_method, VE.booking_method) AS booking_method FROM provider AS PRO JOIN vendor AS VE ON PRO.vendor_id=VE.id WHERE PRO.id='${provider.id}'">
+        <field column="booking_method" name="booking_method"/>
       </entity>
 
       <entity name="provider_loc" dataSource="rw_db" query="SELECT ADDR.city AS city, ADDR.address_state AS state, ADDR.zip_code AS zip_code, CONCAT(ADDR.latitude,',',ADDR.longitude) AS coordinates FROM service_address AS ADDR WHERE ADDR.id='${provider.service_address_id}' AND ADDR.latitude IS NOT NULL AND ADDR.longitude IS NOT NULL">

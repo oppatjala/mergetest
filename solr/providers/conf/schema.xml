@@ -11,7 +11,6 @@
     <fieldType name="date" class="solr.TrieDateField" omitNorms="true" sortMissingLast="true" precisionStep="0" positionIncrementGap="0"/>
     <fieldType name="lat_lon" class="solr.LatLonType" sortMissingLast="true" subFieldSuffix="_lat_lon"/>
     <fieldType name="currency" class="solr.CurrencyField" precisionStep="8" defaultCurrency="USD" currencyConfig="currency.xml" />
-
     <!-- A general text field that has reasonable defaults: 
      it tokenizes with StandardTokenizer,
      removes stop words from case-insensitive "stopwords_en.txt"
@@ -125,7 +124,7 @@
     <field name="max_cost_facetable" type="float" indexed="true" stored="false" required="false"/>
 
     <field name="email" type="string" indexed="true" stored="true" required="false"/>
-    <field name="online_reservation_supported" type="boolean" indexed="true" stored="true" required="false"/>
+    <field name="booking_method" type="int" indexed="true" stored="true" required="false"/>
     <field name="coordinates" type="lat_lon" indexed="true" stored="true" required="false"/>
     <field name="city" type="string" indexed="true" stored="true" required="false"/>
     <field name="state" type="string" indexed="true" stored="true" required="false"/>
