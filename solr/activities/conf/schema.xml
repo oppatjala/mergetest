@@ -156,7 +156,7 @@
     <field name="max_age" type="int" indexed="true" stored="true" required="false"/>
     <field name="min_age" type="int" indexed="true" stored="true" required="false"/>
     <field name="membership_required" type="boolean" indexed="true" stored="true" required="false"/>
-    <field name="online_reservation_supported" type="boolean" indexed="true" stored="true" required="false"/>  <!-- from Vendor -->
+    <field name="booking_method" type="int" indexed="true" stored="true" required="false"/>  <!-- from Vendor -->
 
     <field name="provider_id" type="string" indexed="true" stored="true" required="true"/> <!-- from Provider -->
     <field name="provider_name" type="text_general" indexed="true" stored="true" required="true"/> <!-- from Provider -->
