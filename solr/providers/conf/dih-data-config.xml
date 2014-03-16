@@ -1,9 +1,9 @@
 <dataConfig>
   <document>
     <entity name="provider" pk="id" dataSource="rw_db" onError="skip"
-        query="SELECT * FROM provider WHERE status=1" 
-        deltaQuery="SELECT PRO.* FROM provider PRO, vendor VE WHERE PRO.vendor_id=VE.id AND (PRO.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE) OR VE.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE))"
-        deltaImportQuery="SELECT * FROM provider WHERE id='${dataimporter.delta.id}'"
+        query="SELECT id, vendor_id, external_id, name, description, email, status, created_date, last_modified_date FROM provider" 
+        deltaQuery="SELECT PRO.id FROM provider PRO, vendor VE WHERE PRO.vendor_id=VE.id AND (PRO.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE) OR VE.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE))"
+        deltaImportQuery="SELECT id, vendor_id, external_id, name, description, email, status, created_date, last_modified_date FROM provider WHERE id='${dataimporter.delta.id}'"
         deletedPkQuery="SELECT id FROM provider WHERE (status != 1 OR activity_count &lt; 1) AND last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)">
 
       <field column="id" name="id"/>
@@ -11,6 +11,10 @@
       <field column="external_id" name="external_id"/>
       <field column="name" name="name"/>
       <field column="description" name="description"/>
+      <field column="email" name="email"/>
+      <field column="status" name="status"/>
+      <field column="created_date" name="created_date"/>
+      <field column="last_modified_date" name="last_modified_date"/>
 
       <entity name="activity_option_values" dataSource="rw_db" query="SELECT DISTINCT(GO.name) AS option_name FROM provider PR JOIN activity AC ON PR.id = AC.provider_id JOIN activity_option AO ON AC.id = AO.activity_id JOIN global_option GO ON GO.id = AO.option_id WHERE PR.id  = '${provider.id}'"> 
         <field column="option_name" name="activity_option_values"/>
@@ -38,11 +42,7 @@
         <field column="zip_code" name="zip_code"/>
         <field column="coordinates" name="coordinates"/>
       </entity>
-      
-      <field column="email" name="email"/>
-      <field column="status" name="status"/>
-      <field column="created_date" name="created_date"/>
-      <field column="last_modified_date" name="last_modified_date"/>
+
     </entity>
   </document>
 </dataConfig>
