@@ -1,10 +1,10 @@
 <dataConfig>
   <document>
     <entity name="activity" pk="id" dataSource="rw_db" onError="skip"
-        query="SELECT ACT.id, ACT.cost, ACT.description AS activity_description, ACT.end_date, ACT.external_id, ACT.max_age, ACT.max_capacity, ACT.membership_required, ACT.min_age, ACT.name AS activity_name, ACT.num_open, ACT.start_date, ACT.status, ACT.provider_id, ACT.service_address_id, ACT.last_modified_date, ACT.created_date, ACT.activity_series_id, ACT.md5, ACT.overridden_fields, ACT.policies, ACT.sum_of_stars, ACT.count_of_reviews, ACT.last_crawled_date, ACT.being_crawled FROM activity AS ACT JOIN provider AS PRO ON ACT.provider_id=PRO.id WHERE (ACT.status=1 AND PRO.status=1)" 
-        deltaQuery="SELECT ACT.* FROM activity ACT, provider PRO, vendor VE WHERE ACT.provider_id=PRO.id AND PRO.vendor_id=VE.id AND (ACT.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE) OR PRO.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE) OR VE.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE))"
-        deltaImportQuery="SELECT * FROM activity WHERE id='${dataimporter.delta.id}'"
-        deletedPkQuery="SELECT ACT.id FROM activity AS ACT JOIN provider AS PRO ON ACT.provider_id=PRO.id WHERE (ACT.status!=1 OR PRO.status!=1) AND (ACT.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE) OR PRO.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE))">
+        query="SELECT ACT.id, ACT.name AS activity_name, ACT.description AS activity_description, ACT.cost, ACT.max_capacity, ACT.num_open, ACT.max_age, ACT.min_age, ACT.membership_required, ACT.status, ACT.start_date, ACT.end_date, ACT.created_date, ACT.last_modified_date, ACT.activity_series_id FROM activity AS ACT JOIN provider AS PRO ON ACT.provider_id=PRO.id WHERE (ACT.status=1 AND PRO.status=1)" 
+        deltaQuery="ACT.id FROM activity ACT JOIN provider AS PRO ON ACT.provider_id=PRO.id WHERE  ACT.last_modified_date > DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE) AND (ACT.status = 1 AND PRO.status=1)"
+        deltaImportQuery="SELECT ACT.id, ACT.name, ACT.description, ACT.cost, ACT.max_capacity, ACT.num_open, ACT.max_age, ACT.min_age, ACT.membership_required, ACT.status, ACT.start_date, ACT.end_date, ACT.created_date, ACT.last_modified_date, ACT.activity_series_id FROM activity ACT WHERE ACT.id='${dataimporter.delta.id}'"
+        deletedPkQuery="SELECT ACT.id FROM activity AS ACT  WHERE ACT.status!=1 AND ACT.last_modified_date > DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)">
 
       <field column="id" name="id"/>
       <field column="cost" name="cost"/>
