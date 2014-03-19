@@ -1,7 +1,7 @@
 <dataConfig>
   <document>
     <entity name="provider" pk="id" dataSource="rw_db" onError="skip"
-        query="SELECT * FROM provider WHERE status=1 AND activity_count &gt; 0" 
+        query="SELECT * FROM provider WHERE status=1" 
         deltaQuery="SELECT PRO.* FROM provider PRO, vendor VE WHERE PRO.vendor_id=VE.id AND (PRO.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE) OR VE.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE))"
         deltaImportQuery="SELECT * FROM provider WHERE id='${dataimporter.delta.id}'"
         deletedPkQuery="SELECT id FROM provider WHERE (status != 1 OR activity_count &lt; 1) AND last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)">
