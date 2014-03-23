@@ -20,8 +20,7 @@
       <field column="last_modified_date" name="last_modified_date"/>
       <field column="activity_series_id" name="activity_series_id"/>
       
-      <entity name="activity_series" dataSource="rw_db" query="SELECT IF(SERIES_DATA.series_amount &gt; 0, SERIES_DATA.series_name, '${activity.activity_name}') AS name, IF(SERIES_DATA.series_amount &gt; 0, SERIES_DATA.series_description, '${activity.activity_description}') AS description 
-  FROM (SELECT COUNT(SERIES.id) AS series_amount, SERIES.name AS series_name, SERIES.description AS series_description FROM activity_series AS SERIES WHERE SERIES.id = '${activity.activity_series_id}') AS SERIES_DATA">
+      <entity name="activity_series" dataSource="rw_db" query="SELECT IF(SERIES_DATA.series_amount &gt; 0, SERIES_DATA.series_name, '${dataimporter.functions.escapedSql(activity.activity_name)}') AS name, IF(SERIES_DATA.series_amount &gt; 0, SERIES_DATA.series_description, '${dataimporter.functions.escapedSql(activity.activity_description)}') AS description FROM (SELECT COUNT(SERIES.id) AS series_amount, SERIES.name AS series_name, SERIES.description AS series_description FROM activity_series AS SERIES WHERE SERIES.id = '${activity.activity_series_id}') AS SERIES_DATA">
        <field column="name" name="name"/>
        <field column="description" name="description"/>
       </entity>
