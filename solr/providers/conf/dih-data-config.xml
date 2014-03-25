@@ -1,9 +1,11 @@
 <dataConfig>
   <document>
     <entity name="provider" pk="id" dataSource="rw_db" onError="skip"
-        query="SELECT id, vendor_id, external_id, name, description, email, status, created_date, last_modified_date FROM provider" 
-        deltaQuery="SELECT PRO.id FROM provider PRO, vendor VE WHERE PRO.vendor_id=VE.id AND (PRO.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE) OR VE.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE))"
-        deltaImportQuery="SELECT id, vendor_id, external_id, name, description, email, status, created_date, last_modified_date FROM provider WHERE id='${dataimporter.delta.id}'">
+        query="SELECT id, vendor_id, external_id, name, description, email, status, created_date, last_modified_date FROM provider WHERE status != 0"  
+        deltaQuery="SELECT PRO.id FROM provider PRO, vendor VE WHERE PRO.vendor_id=VE.id AND PRO.status != 0 AND (PRO.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE) OR VE.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE))"
+        deltaImportQuery="SELECT id, vendor_id, external_id, name, description, email, status, created_date, last_modified_date FROM provider WHERE id='${dataimporter.delta.id}'"
+        deletedPkQuery="SELECT id FROM provider WHERE status = 0 AND last_modified_date > DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)">
+
         
       <field column="id" name="id"/>
       <field column="vendor_id" name="vendor_id"/>
