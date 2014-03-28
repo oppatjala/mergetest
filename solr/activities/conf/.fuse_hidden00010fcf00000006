@@ -2,9 +2,9 @@
   <document>
     <entity name="activity" pk="id" dataSource="rw_db" onError="skip"
         query="SELECT ACT.id, ACT.name AS activity_name, ACT.description AS activity_description, ACT.cost, ACT.max_capacity, ACT.num_open, ACT.max_age, ACT.min_age, ACT.membership_required, ACT.status, ACT.start_date, ACT.end_date, ACT.created_date, ACT.last_modified_date, ACT.activity_series_id, ACT.provider_id FROM activity AS ACT JOIN provider AS PRO ON ACT.provider_id=PRO.id WHERE (ACT.status=1 AND PRO.status=1)" 
-        deltaQuery="SELECT ACT.id FROM activity ACT JOIN provider AS PRO ON ACT.provider_id=PRO.id WHERE  ACT.last_modified_for_index > DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE) AND (ACT.status = 1 AND PRO.status=1)"
-        deltaImportQuery="SELECT ACT.id, ACT.name, ACT.description, ACT.cost, ACT.max_capacity, ACT.num_open, ACT.max_age, ACT.min_age, ACT.membership_required, ACT.status, ACT.start_date, ACT.end_date, ACT.created_date, ACT.last_modified_date, ACT.activity_series_id, ACT.provider_id FROM activity ACT WHERE ACT.id='${dataimporter.delta.id}'"
-        deletedPkQuery="SELECT ACT.id FROM activity AS ACT  WHERE ACT.status!=1 AND ACT.last_modified_for_index > DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)">
+        deltaQuery="SELECT ACT.id FROM activity ACT JOIN provider AS PRO ON ACT.provider_id=PRO.id WHERE  ACT.last_modified_date > DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE) AND (ACT.status = 1 AND PRO.status=1)"
+        deltaImportQuery="SELECT ACT.id, ACT.name, ACT.description, ACT.cost, ACT.max_capacity, ACT.num_open, ACT.max_age, ACT.min_age, ACT.membership_required, ACT.status, ACT.start_date, ACT.end_date, ACT.created_date, ACT.last_modified_date, ACT.activity_series_id FROM activity ACT WHERE ACT.id='${dataimporter.delta.id}'"
+        deletedPkQuery="SELECT ACT.id FROM activity AS ACT  WHERE ACT.status!=1 AND ACT.last_modified_date > DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)">
 
       <field column="id" name="id"/>
       <field column="cost" name="cost"/>
@@ -48,7 +48,7 @@
           <field column="top_level_category_names" name="top_level_category_names"/>
         </entity>	
       </entity>
-
+	  
       <entity name="events" dataSource="rw_db" query="SELECT AE.instructor AS event_instructor, AE.event_start AS event_start, AE.event_finish AS event_finish FROM activity_event AS AE WHERE AE.activity_id='${activity.id}' AND AE.status=1 ORDER BY AE.event_start ASC LIMIT 1">
         <field column="event_instructor" name="first_event_instructor"/>
         <field column="event_start" name="first_event_start"/>
