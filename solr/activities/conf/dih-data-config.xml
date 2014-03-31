@@ -1,12 +1,14 @@
 <dataConfig>
   <document>
     <entity name="activity" pk="id" dataSource="rw_db" onError="skip"
-        query="SELECT ACT.id, ACT.name AS activity_name, ACT.description AS activity_description, ACT.cost, ACT.max_capacity, ACT.num_open, ACT.max_age, ACT.min_age, ACT.membership_required, ACT.status, ACT.start_date, ACT.end_date, ACT.created_date, ACT.last_modified_date, ACT.activity_series_id, ACT.provider_id FROM activity AS ACT JOIN provider AS PRO ON ACT.provider_id=PRO.id WHERE (ACT.status=1 AND PRO.status=1)" 
-        deltaQuery="SELECT ACT.id FROM activity ACT JOIN provider AS PRO ON ACT.provider_id=PRO.id WHERE  ACT.last_modified_for_index > DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE) AND (ACT.status = 1 AND PRO.status=1)"
-        deltaImportQuery="SELECT ACT.id, ACT.name, ACT.description, ACT.cost, ACT.max_capacity, ACT.num_open, ACT.max_age, ACT.min_age, ACT.membership_required, ACT.status, ACT.start_date, ACT.end_date, ACT.created_date, ACT.last_modified_date, ACT.activity_series_id, ACT.provider_id FROM activity ACT WHERE ACT.id='${dataimporter.delta.id}'"
-        deletedPkQuery="SELECT ACT.id FROM activity AS ACT  WHERE ACT.status!=1 AND ACT.last_modified_for_index > DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)">
+        query="SELECT ACT.id, IF(SERIES.name IS NULL, ACT.name, SERIES.name) AS name, IF(SERIES.name IS NULL, ACT.description, SERIES.description) AS description, ACT.cost, ACT.max_capacity, ACT.num_open, ACT.max_age, ACT.min_age, ACT.membership_required, ACT.status, ACT.start_date, ACT.end_date, ACT.created_date, ACT.last_modified_date, ACT.activity_series_id, ACT.provider_id FROM activity AS ACT JOIN provider AS PRO ON ACT.provider_id=PRO.id LEFT JOIN activity_series SERIES ON (SERIES.id = ACT.activity_series_id AND SERIES.provider_id = ACT.provider_id) WHERE (ACT.status=1 AND PRO.status=1)" 
+        deltaQuery="SELECT ACT.id FROM activity ACT JOIN provider AS PRO ON ACT.provider_id=PRO.id WHERE ACT.last_modified_for_index > DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE) AND (ACT.status = 1 AND PRO.status=1)"
+        deltaImportQuery="SELECT ACT.id, IF(SERIES.name IS NULL, ACT.name, SERIES.name) AS name, IF(SERIES.name IS NULL, ACT.description) AS description, ACT.cost, ACT.max_capacity, ACT.num_open, ACT.max_age, ACT.min_age, ACT.membership_required, ACT.status, ACT.start_date, ACT.end_date, ACT.created_date, ACT.last_modified_date, ACT.activity_series_id, ACT.provider_id FROM activity ACT LEFT JOIN activity_series SERIES ON (SERIES.id = ACT.activity_series_id AND SERIES.provider_id = ACT.provider_id) WHERE ACT.id='${dataimporter.delta.id}'"
+        deletedPkQuery="SELECT ACT.id FROM activity AS ACT WHERE ACT.status!=1 AND ACT.last_modified_for_index > DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)">
 
       <field column="id" name="id"/>
+      <field column="name" name="name"/>
+      <field column="description" name="description"/>      
       <field column="cost" name="cost"/>
       <field column="max_capacity" name="max_capacity"/>
       <field column="num_open" name="num_open"/>
@@ -19,11 +21,6 @@
       <field column="created_date" name="created_date"/>
       <field column="last_modified_date" name="last_modified_date"/>
       <field column="activity_series_id" name="activity_series_id"/>
-      
-      <entity name="activity_series" dataSource="rw_db" query="SELECT IF(SERIES_DATA.series_amount &gt; 0, SERIES_DATA.series_name, &quot;${activity.activity_name}&quot;) AS name, IF(SERIES_DATA.series_amount &gt; 0, SERIES_DATA.series_description, IF(&quot;${activity.activity_description}&quot; = &quot;&quot;, NULL, &quot;${activity.activity_description}&quot;)) AS description FROM (SELECT COUNT(SERIES.id) AS series_amount, SERIES.name AS series_name, SERIES.description AS series_description FROM activity_series AS SERIES WHERE SERIES.id = '${activity.activity_series_id}' AND SERIES.provider_id = '${activity.provider_id}') AS SERIES_DATA">
-       <field column="name" name="name"/>
-       <field column="description" name="description"/>
-      </entity>
       
       <entity name="activity_option_values" dataSource="rw_db" query="SELECT GO.name AS activity_option_name FROM reservation.activity_option AO, global_option GO WHERE AO.activity_id = '${activity.id}' AND AO.option_id = GO.id" >
         <field column="activity_option_name" name="activity_option_values"/>
