@@ -21,7 +21,7 @@
       <field column="last_modified_date" name="last_modified_date"/>
       <field column="activity_series_id" name="activity_series_id"/>
       
-      <entity name="activity_option_values" dataSource="rw_db" query="SELECT GO.name AS activity_option_name FROM reservation.activity_option AO, global_option GO WHERE AO.activity_id = '${activity.id}' AND AO.option_id = GO.id" >
+      <entity name="activity_option_values" dataSource="rw_db" query="SELECT PO.name AS activity_option_name FROM reservation.activity_option AO, global_option PO WHERE AO.activity_id = '${activity.id}' AND AO.option_id = PO.id" >
         <field column="activity_option_name" name="activity_option_values"/>
       </entity>
 
