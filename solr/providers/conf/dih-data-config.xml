@@ -17,7 +17,7 @@
       <field column="created_date" name="created_date"/>
       <field column="last_modified_date" name="last_modified_date"/>
 
-      <entity name="activity_option_values" dataSource="rw_db" query="SELECT DISTINCT(GO.name) AS option_name FROM provider PR JOIN activity AC ON PR.id = AC.provider_id JOIN activity_option AO ON AC.id = AO.activity_id JOIN global_option GO ON GO.id = AO.option_id WHERE PR.id  = '${provider.id}'"> 
+      <entity name="activity_option_values" dataSource="rw_db" query="SELECT DISTINCT(PO.name) AS option_name FROM provider PR JOIN activity AC ON PR.id = AC.provider_id JOIN activity_option AO ON AC.id = AO.activity_id JOIN provider_option PO ON PO.id = AO.option_id WHERE PR.id  = '${provider.id}'"> 
         <field column="option_name" name="activity_option_values"/>
       </entity>
 
