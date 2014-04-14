@@ -8,7 +8,6 @@
 SELECT ACT.id FROM activity AS ACT  
   JOIN provider AS PRO 
     ON ACT.provider_id=PRO.id
-  LEFT JOIN activity_series SERIES ON (SERIES.id = ACT.activity_series_id AND SERIES.provider_id = ACT.provider_id) 
  WHERE (ACT.status!=1 OR PRO.status!=1) 
 ">
       <field column="id" name="id"/>
