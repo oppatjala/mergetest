@@ -10,11 +10,7 @@ SELECT ACT.id FROM activity AS ACT
     ON ACT.provider_id=PRO.id
   LEFT JOIN activity_series SERIES ON (SERIES.id = ACT.activity_series_id AND SERIES.provider_id = ACT.provider_id) 
  WHERE (ACT.status!=1 OR PRO.status!=1) 
-   AND IF(SERIES.last_modified_date IS NULL, 
-          ACT.last_modified_for_index, 
-		  GREATEST(SERIES.last_modified_date,
-            	   ACT.last_modified_for_index,
-				   PRO.last_modified_date)) > DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)">
+">
       <field column="id" name="id"/>
       <field column="name" name="name"/>
       <field column="description" name="description"/>      
