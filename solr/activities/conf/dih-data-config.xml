@@ -9,6 +9,9 @@ SELECT ACT.id FROM activity AS ACT
   JOIN provider AS PRO 
     ON ACT.provider_id=PRO.id
  WHERE (ACT.status!=1 OR PRO.status!=1) 
+   AND GREATEST(PRO.last_modified_date, ACT.last_modified_for_index) 
+       &gt; 
+       DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)
 ">
       <field column="id" name="id"/>
       <field column="name" name="name"/>
