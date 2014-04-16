@@ -2,7 +2,31 @@
   <document>
     <entity name="activity" pk="id" dataSource="rw_db" onError="skip"
         query="SELECT ACT.id, IF(SERIES.name IS NULL, ACT.name, SERIES.name) AS name, IF(SERIES.name IS NULL, ACT.description, SERIES.description) AS description, ACT.cost, ACT.max_capacity, ACT.num_open, ACT.max_age, ACT.min_age, ACT.membership_required, ACT.status, ACT.start_date, ACT.end_date, ACT.created_date, ACT.last_modified_date, ACT.activity_series_id, ACT.provider_id FROM activity AS ACT JOIN provider AS PRO ON ACT.provider_id=PRO.id LEFT JOIN activity_series SERIES ON (SERIES.id = ACT.activity_series_id AND SERIES.provider_id = ACT.provider_id) WHERE (ACT.status=1 AND PRO.status=1)" 
-        deltaQuery="SELECT ACT.id FROM activity ACT JOIN provider AS PRO ON ACT.provider_id=PRO.id LEFT JOIN activity_series SERIES ON (SERIES.id = ACT.activity_series_id AND SERIES.provider_id = ACT.provider_id) WHERE IF(SERIES.last_modified_date IS NULL, ACT.last_modified_for_index, GREATEST(SERIES.last_modified_date, ACT.last_modified_for_index)) > DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE) AND (ACT.status = 1 AND PRO.status=1)"
+        deltaQuery="SELECT a.id 
+  from provider p,
+       activity a      
+ WHERE p.status=1
+   AND p.last_modified_date &gt;=DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)
+   AND a.provider_id=p.id
+   AND a.status=1       
+UNION
+SELECT a.id 
+  from activity a,
+       provider p
+ WHERE a.status=1       
+   AND a.last_modified_for_index &gt;=DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)
+   AND p.id=a.provider_id
+   AND p.status=1
+UNION
+SELECT a.id 
+  from activity_series s,
+       activity a,
+       provider p
+ WHERE s.last_modified_date &gt;=DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)
+   AND a.activity_series_id=s.id
+   AND a.status=1
+   AND p.id=a.provider_id
+   AND p.status=1"
         deltaImportQuery="SELECT ACT.id, IF(SERIES.name IS NULL, ACT.name, SERIES.name) AS name, IF(SERIES.name IS NULL, ACT.description, SERIES.description) AS description, ACT.cost, ACT.max_capacity, ACT.num_open, ACT.max_age, ACT.min_age, ACT.membership_required, ACT.status, ACT.start_date, ACT.end_date, ACT.created_date, ACT.last_modified_date, ACT.activity_series_id, ACT.provider_id FROM activity ACT LEFT JOIN activity_series SERIES ON (SERIES.id = ACT.activity_series_id AND SERIES.provider_id = ACT.provider_id) WHERE ACT.id='${dataimporter.delta.id}'"
         deletedPkQuery="
 SELECT ACT.id FROM activity AS ACT  
@@ -10,7 +34,7 @@ SELECT ACT.id FROM activity AS ACT
     ON ACT.provider_id=PRO.id
  WHERE (ACT.status!=1 OR PRO.status!=1) 
    AND GREATEST(PRO.last_modified_date, ACT.last_modified_for_index) 
-       &gt; 
+       &gt;= 
        DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)
 ">
       <field column="id" name="id"/>
