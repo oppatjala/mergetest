@@ -29,13 +29,17 @@ SELECT a.id
    AND p.status=1"
         deltaImportQuery="SELECT ACT.id, IF(SERIES.name IS NULL, ACT.name, SERIES.name) AS name, IF(SERIES.name IS NULL, ACT.description, SERIES.description) AS description, ACT.cost, ACT.max_capacity, ACT.num_open, ACT.max_age, ACT.min_age, ACT.membership_required, ACT.status, ACT.start_date, ACT.end_date, ACT.created_date, ACT.last_modified_date, ACT.activity_series_id, ACT.provider_id FROM activity ACT LEFT JOIN activity_series SERIES ON (SERIES.id = ACT.activity_series_id AND SERIES.provider_id = ACT.provider_id) WHERE ACT.id='${dataimporter.delta.id}'"
         deletedPkQuery="
-SELECT ACT.id FROM activity AS ACT  
-  JOIN provider AS PRO 
-    ON ACT.provider_id=PRO.id
- WHERE (ACT.status!=1 OR PRO.status!=1) 
-   AND GREATEST(PRO.last_modified_date, ACT.last_modified_for_index) 
-       &gt;= 
-       DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)
+SELECT a.id 
+  from provider p,
+       activity a      
+ WHERE p.status!=1
+   AND p.last_modified_date &gt;=DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)
+   AND a.provider_id=p.id
+UNION
+SELECT a.id 
+  from activity a
+ WHERE a.status!=1       
+   AND a.last_modified_for_index &gt;=DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)
 ">
       <field column="id" name="id"/>
       <field column="name" name="name"/>
