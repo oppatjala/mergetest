@@ -1,10 +1,54 @@
 <dataConfig>
   <document>
     <entity name="provider" pk="id" dataSource="rw_db" onError="skip"
-        query="SELECT id, vendor_id, external_id, name, description, email, status, created_date, last_modified_date FROM provider WHERE status != 0"  
-        deltaQuery="SELECT PRO.id FROM provider PRO, vendor VE WHERE PRO.vendor_id=VE.id AND PRO.status != 0 AND (PRO.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE) OR VE.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE))"
-        deltaImportQuery="SELECT id, vendor_id, external_id, name, description, email, status, created_date, last_modified_date FROM provider WHERE id='${dataimporter.delta.id}'"
-        deletedPkQuery="SELECT id FROM provider WHERE status = 0 AND last_modified_date > DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)">
+        query="
+SELECT id,
+       vendor_id,
+       external_id,
+       name,
+       description,
+       email,
+       status,
+       min_cost,
+       max_cost,
+       created_date,
+       last_modified_date
+  FROM provider
+ WHERE status != 0
+"
+        deltaQuery="
+SELECT PRO.id 
+  FROM provider PRO,
+       vendor VE 
+ WHERE PRO.vendor_id=VE.id 
+   AND PRO.status != 0
+   AND (
+       PRO.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE) 
+       OR 
+       VE.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)
+       )
+"
+        deltaImportQuery="
+SELECT id,
+       vendor_id,
+       external_id,
+       name,
+       description,
+       email,
+       status,
+       min_cost,
+       max_cost,
+       created_date,
+       last_modified_date
+  FROM provider 
+ WHERE id='${dataimporter.delta.id}'
+"
+        deletedPkQuery="
+SELECT id 
+  FROM provider 
+ WHERE status = 0
+   AND last_modified_date > DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)
+">
 
         
       <field column="id" name="id"/>
@@ -16,14 +60,11 @@
       <field column="status" name="status"/>
       <field column="created_date" name="created_date"/>
       <field column="last_modified_date" name="last_modified_date"/>
+      <field column="min_cost" name="min_cost"/>
+      <field column="max_cost" name="min_cost"/>
 
       <entity name="activity_option_values" dataSource="rw_db" query="SELECT DISTINCT(PO.name) AS option_name FROM provider PR JOIN activity AC ON PR.id = AC.provider_id JOIN activity_option AO ON AC.id = AO.activity_id JOIN provider_option PO ON PO.id = AO.option_id WHERE PR.id  = '${provider.id}'"> 
         <field column="option_name" name="activity_option_values"/>
-      </entity>
-
-      <entity name="option_costs" dataSource="rw_db" query="SELECT min(AO.cost_override) AS min_cost, max(AO.cost_override) AS max_cost FROM provider PR JOIN activity AC ON PR.id = AC.provider_id JOIN activity_option AO ON AC.id = AO.activity_id WHERE PR.id = '${provider.id}'" >
-        <field column="min_cost" name="min_cost"/>
-        <field column="max_cost" name="max_cost"/>
       </entity>
 
       <entity name="leaf_categories" dataSource="rw_db" query="SELECT distinct(CAT.parent_id) AS top_level_category_ids, PARENT_CAT.name AS top_level_category_names, CAT.id AS leaf_category_ids, CAT.name AS leaf_category_names FROM category AS CAT JOIN provider_categories AS PC ON CAT.id=PC.category_id JOIN provider AS PRO ON PC.provider_id=PRO.id JOIN category AS PARENT_CAT ON CAT.parent_id=PARENT_CAT.id WHERE PRO.id='${provider.id}' AND CAT.depth=2 AND PARENT_CAT.id=CAT.parent_id">
