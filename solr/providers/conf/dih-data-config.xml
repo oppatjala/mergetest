@@ -47,7 +47,7 @@ SELECT id,
 SELECT id 
   FROM provider 
  WHERE status = 0
-   AND last_modified_date > DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)
+   AND last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)
 ">
 
         
