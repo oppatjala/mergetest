@@ -1,9 +1,8 @@
-package com.itivitykids.reservation.test.solr;
-
 /*
  * Copyright (c) ITivityKids, Inc. All Rights Reserved.
  */
 
+package com.itivitykids.reservation.test.solr;
 
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
