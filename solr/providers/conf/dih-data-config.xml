@@ -12,7 +12,8 @@ SELECT id,
        min_cost,
        max_cost,
        created_date,
-       last_modified_date
+       last_modified_date,
+       service_address_id
   FROM provider
  WHERE status != 0
 "
@@ -39,7 +40,8 @@ SELECT id,
        min_cost,
        max_cost,
        created_date,
-       last_modified_date
+       last_modified_date,
+       service_address_id
   FROM provider 
  WHERE id='${dataimporter.delta.id}'
 "
