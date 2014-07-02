@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<schema name="categories" version="1.5">
+  <types>
+    <fieldType name="string" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
+    <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true" omitNorms="true"/>       
+    <fieldType name="int" class="solr.TrieIntField" precisionStep="0" omitNorms="true" sortMissingLast="true" positionIncrementGap="0"/>
+    <fieldType name="float" class="solr.TrieFloatField" precisionStep="0" omitNorms="true" sortMissingLast="true" positionIncrementGap="0"/>
+    <fieldType name="long" class="solr.TrieLongField" precisionStep="0" omitNorms="true" sortMissingLast="true" positionIncrementGap="0"/>
+    <fieldType name="double" class="solr.TrieDoubleField" precisionStep="0" omitNorms="true" sortMissingLast="true" positionIncrementGap="0"/>    
+    <fieldType name="date" class="solr.TrieDateField" omitNorms="true" sortMissingLast="true" precisionStep="0" positionIncrementGap="0"/>
+
+    <!-- A general text field that has reasonable defaults: 
+     it tokenizes with StandardTokenizer,
+     removes stop words from case-insensitive "stopwords_en.txt"
+     (empty by default), and down cases.  At query time only, it
+     also applies synonyms. -->
+    <fieldType name="text_general" class="solr.TextField" positionIncrementGap="100">
+      <analyzer type="index">
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.TrimFilterFactory"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords_en.txt" enablePositionIncrements="true" />
+        <filter class="solr.LowerCaseFilterFactory"/>
+      </analyzer>
+      <analyzer type="query">
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.TrimFilterFactory"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords_en.txt" enablePositionIncrements="true" />
+        <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+      </analyzer>
+    </fieldType>
+
+    <!-- field type for precise names -->
+    <fieldType name="text_precise" class="solr.TextField" positionIncrementGap="100">
+      <analyzer type="index">
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.EnglishPossessiveFilterFactory"/>        
+      </analyzer>
+      <analyzer type="query">
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.EnglishPossessiveFilterFactory"/>        
+      </analyzer>
+    </fieldType>
+
+    <fieldType name="text_alpha_only_sort" class="solr.TextField" sortMissingLast="true" omitNorms="true">
+      <analyzer>
+        <!-- KeywordTokenizer does no actual tokenizing, so the entire
+             input string is preserved as a single token
+          -->
+				<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\.,;:\-_])" replacement=" "/>
+        <tokenizer class="solr.KeywordTokenizerFactory"/>
+        <!-- The LowerCase TokenFilter does what you expect, which can be
+             when you want your sorting to be case insensitive
+          -->
+        <filter class="solr.LowerCaseFilterFactory" />
+        <!-- The TrimFilter removes any leading or trailing whitespace -->
+        <filter class="solr.TrimFilterFactory" />
+      </analyzer>
+    </fieldType>
+
+    <!-- Prefix N-Gram type, used for autocomplete functionality -->
+		<fieldType name="autocomplete_edge" class="solr.TextField">
+			<analyzer type="index">
+				<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\.,;:\-_])" replacement=" "/>
+				<charFilter class="solr.MappingCharFilterFactory" mapping="mapping-ISOLatin1Accent.txt"/>
+				<tokenizer class="solr.KeywordTokenizerFactory"/>
+				<filter class="solr.LowerCaseFilterFactory"/>
+				<filter class="solr.EdgeNGramFilterFactory" maxGramSize="30" minGramSize="1"/>
+			</analyzer>
+			<analyzer type="query">
+				<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\.,;:\-_])" replacement=" "/>
+				<charFilter class="solr.MappingCharFilterFactory" mapping="mapping-ISOLatin1Accent.txt"/>
+				<tokenizer class="solr.KeywordTokenizerFactory"/>
+				<filter class="solr.LowerCaseFilterFactory"/>
+				<filter class="solr.PatternReplaceFilterFactory" pattern="^(.{30})(.*)?" replacement="$1"/>
+			</analyzer>
+		</fieldType>
+		
+    <fieldType name="text_subphrase_match" class="solr.TextField" positionIncrementGap="100">
+      <analyzer type="index">
+				<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\.,;:\-_+*/])" replacement=" "/>
+        <tokenizer class="solr.KeywordTokenizerFactory"/>
+        <filter class="solr.TrimFilterFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+      </analyzer>
+      <analyzer type="query">
+				<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\.,;:\-_+*/])" replacement=" "/>
+        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <filter class="solr.TrimFilterFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.ShingleFilterFactory" maxShingleSize="4" minShingleSize="2" outputUnigramsIfNoShingles="true" outputUnigrams="true" tokenSeparator=" "/>
+      </analyzer>
+    </fieldType>
+  </types>
+
+  <fields>
+    <field name="id" type="string" indexed="true" stored="true" required="true"/>
+    <field name="parent_id" type="string" indexed="true" stored="true"/>
+    <field name="children_ids" type="string" indexed="true" stored="true" multiValued="true"/>
+    <field name="depth" type="int" indexed="true" stored="true"/>
+    
+    <field name="name" type="text_general" indexed="true" stored="true" required="true" termVectors="true"/>
+    <field name="name_alpha_sort" type="text_alpha_only_sort" indexed="true" stored="false" termVectors="true"/> <!-- Do not set this, copy fields set this -->
+    <field name="name_auto_start_ngrams" type="autocomplete_edge" indexed="true" stored="true" multiValued="false" termVectors="true"/> <!-- Do not set this, copy fields set this -->
+    <field name="synonyms_alpha_sort" type="text_alpha_only_sort" indexed="true" stored="false" multiValued="true" termVectors="true"/> <!-- Do not set this, copy fields set this -->
+    <field name="synonyms_auto_start_ngrams" type="autocomplete_edge" indexed="true" stored="true" multiValued="true" termVectors="true"/> <!-- Do not set this, copy fields set this -->
+
+    
+    <field name="synonyms" type="text_subphrase_match" indexed="true" stored="true" required="false" multiValued="true" termVectors="true"/>
+    <field name="defining_terms" type="text_subphrase_match" indexed="true" stored="true" required="false" multiValued="true" termVectors="true"/>-    
+
+    <!-- These fields track the status of the activity entry, they do not specify event data -->
+    <field name="catchall" type="text_general" indexed="true" stored="false" multiValued="true"/> <!-- Do not set this, copy fields set this -->
+    
+    <!-- Required by the system to enable clustering -->
+    <field name="_version_" type="long" indexed="true" stored="true" multiValued="false"/> <!-- Do not set this, the index will set this -->
+  </fields>
+
+  <!-- Field to use to determine and enforce document uniqueness.
+      Unless this field is marked with required="false", it will be a required field
+   -->
+  <uniqueKey>id</uniqueKey>
+
+  <!-- field for the QueryParser to use when an explicit fieldname is absent -->
+  <defaultSearchField>catchall</defaultSearchField>
+
+  <!-- SolrQueryParser configuration: defaultOperator="AND|OR" -->
+  <solrQueryParser defaultOperator="OR"/>
+
+  <copyField source="name" dest="catchall"/>
+  <copyField source="synonyms" dest="catchall"/>
+  <copyField source="defining_terms" dest="catchall"/>
+  
+  <copyField source="name" dest="name_alpha_sort"/>
+  <copyField source="name" dest="name_auto_start_ngrams"/>
+  <copyField source="synonyms" dest="synonyms_alpha_sort"/>
+  <copyField source="synonyms" dest="synonyms_auto_start_ngrams"/>
+</schema>

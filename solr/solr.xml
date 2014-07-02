@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<solr sharedLib="lib" persistent="true">
+  <cores adminPath="/admin/cores" defaultCoreName="activities" host="${host:}" hostPort="${solr.port:}" hostContext="${hostContext:}" zkClientTimeout="${zkClientTimeout:15000}">
+    <core name="activities" instanceDir="activities" default="true"/>
+    <core name="providers" instanceDir="providers"/>
+    <core name="categories" instanceDir="categories"/>
+  </cores>
+</solr>

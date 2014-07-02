@@ -1,0 +1,92 @@
+<dataConfig>
+  <document>
+    <entity name="provider" pk="id" dataSource="rw_db" onError="skip"
+        query="
+SELECT id,
+       vendor_id,
+       external_id,
+       name,
+       description,
+       email,
+       status,
+       min_cost,
+       max_cost,
+       created_date,
+       last_modified_date,
+       service_address_id
+  FROM provider
+ WHERE status != 0
+"
+        deltaQuery="
+SELECT PRO.id 
+  FROM provider PRO,
+       vendor VE 
+ WHERE PRO.vendor_id=VE.id 
+   AND PRO.status != 0
+   AND (
+       PRO.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE) 
+       OR 
+       VE.last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)
+       )
+"
+        deltaImportQuery="
+SELECT id,
+       vendor_id,
+       external_id,
+       name,
+       description,
+       email,
+       status,
+       min_cost,
+       max_cost,
+       created_date,
+       last_modified_date,
+       service_address_id
+  FROM provider 
+ WHERE id='${dataimporter.delta.id}'
+"
+        deletedPkQuery="
+SELECT id 
+  FROM provider 
+ WHERE status = 0
+   AND last_modified_date &gt; DATE_SUB('${dataimporter.last_index_time}', INTERVAL 1 MINUTE)
+">
+
+        
+      <field column="id" name="id"/>
+      <field column="vendor_id" name="vendor_id"/>
+      <field column="external_id" name="external_id"/>
+      <field column="name" name="name"/>
+      <field column="description" name="description"/>
+      <field column="email" name="email"/>
+      <field column="status" name="status"/>
+      <field column="created_date" name="created_date"/>
+      <field column="last_modified_date" name="last_modified_date"/>
+      <field column="min_cost" name="min_cost"/>
+      <field column="max_cost" name="min_cost"/>
+
+      <entity name="activity_option_values" dataSource="rw_db" query="SELECT DISTINCT(PO.name) AS option_name FROM provider PR JOIN activity AC ON PR.id = AC.provider_id JOIN activity_option AO ON AC.id = AO.activity_id JOIN provider_option PO ON PO.id = AO.option_id WHERE PR.id  = '${provider.id}'"> 
+        <field column="option_name" name="activity_option_values"/>
+      </entity>
+
+      <entity name="leaf_categories" dataSource="rw_db" query="SELECT distinct(CAT.parent_id) AS top_level_category_ids, PARENT_CAT.name AS top_level_category_names, CAT.id AS leaf_category_ids, CAT.name AS leaf_category_names FROM category AS CAT JOIN provider_categories AS PC ON CAT.id=PC.category_id JOIN provider AS PRO ON PC.provider_id=PRO.id JOIN category AS PARENT_CAT ON CAT.parent_id=PARENT_CAT.id WHERE PRO.id='${provider.id}' AND CAT.depth=2 AND PARENT_CAT.id=CAT.parent_id">
+        <field column="leaf_category_ids" name="leaf_category_ids"/>
+        <field column="leaf_category_names" name="leaf_category_names"/>        
+        <field column="top_level_category_ids" name="top_level_category_ids"/>
+        <field column="top_level_category_names" name="top_level_category_names"/>
+      </entity>
+
+      <entity name="vendor" dataSource="rw_db" query="SELECT IF(PRO.booking_method IS NOT NULL, PRO.booking_method, VE.booking_method) AS booking_method FROM provider AS PRO JOIN vendor AS VE ON PRO.vendor_id=VE.id WHERE PRO.id='${provider.id}'">
+        <field column="booking_method" name="booking_method"/>
+      </entity>
+
+      <entity name="provider_loc" dataSource="rw_db" query="SELECT ADDR.city AS city, ADDR.address_state AS state, ADDR.zip_code AS zip_code, CONCAT(ADDR.latitude,',',ADDR.longitude) AS coordinates FROM service_address AS ADDR WHERE ADDR.id='${provider.service_address_id}' AND ADDR.latitude IS NOT NULL AND ADDR.longitude IS NOT NULL">
+        <field column="city" name="city"/>
+        <field column="state" name="state"/>
+        <field column="zip_code" name="zip_code"/>
+        <field column="coordinates" name="coordinates"/>
+      </entity>
+
+    </entity>
+  </document>
+</dataConfig>
